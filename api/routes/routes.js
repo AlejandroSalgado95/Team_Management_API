@@ -35,6 +35,10 @@ router
   .put(userController.authenticate, taskController.updateOneTask) //UPDATE
   .delete(userController.authenticate, taskController.deleteOneTask); //DELETE
 
+  router
+    .route('/users/:userId/tasks')
+    .get(userController.authenticate, taskController.getTasksFromUser); //READ
+
 
 
 

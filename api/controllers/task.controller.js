@@ -36,6 +36,40 @@ module.exports.getAllTasks = async (req, res) => {
    
 };
 
+module.exports.getTasksFromUser = async (req, res) => {
+
+  var userId = req.params.userId;
+
+  console.log('GET the tasks from user ' + userId);
+
+  const loggedUser = await UserModel.findOne({account:req.account});
+
+  //any logged in user can see all existing tasks
+  if (loggedUser){
+
+    await TaskModel
+      .find({assignedToUser: userId})
+      .exec( (err, tasks) => {
+        if (err) {
+          console.log("Error finding tasks");
+          res
+            .status(500)
+            .json(err);
+        } else {
+          console.log("Found tasks", tasks.length);
+          res
+            .json(tasks);
+        }
+      });
+
+  } else {
+    
+        res.status(404).json({ "message" : 'No authorized user found'});
+  }
+
+
+}
+
 
 
 module.exports.addOneTask = async (req, res) => {

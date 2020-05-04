@@ -19,6 +19,7 @@ module.exports.getAllUsers = async (req, res) => {
 
     await UserModel
       .find({})
+      .select('-password')
       .exec( (err, users) => {
         if (err) {
           console.log("Error finding users");
@@ -102,6 +103,7 @@ module.exports.getOneUser = async (req, res) => {
 
     await UserModel
       .findById(id)
+      .select('-password')
       .exec(function(err, doc) {
         var response = {
           status : 200,
@@ -290,7 +292,7 @@ module.exports.login =  async (req, res) => {
         if (bcrypt.compareSync(password, user.password)) {
           console.log('User found', user);
           var token = jwt.sign({ account: user.account }, process.env.JWT_SECRET, { expiresIn: 3600 });
-          res.status(200).json({success: true, token: token});
+          res.status(200).json({success: true, token: token, userinfo: {_id: user._id, account: user.account, name: user.name, role: user.role, user_type: user.user_type} });
         } else {
           res.status(401).json('Unauthorized');
         }
@@ -324,7 +326,6 @@ module.exports.authenticate = async (req, res, next) => {
     res.status(403).json('No token provided');
   }
 };
-
 
 
 
