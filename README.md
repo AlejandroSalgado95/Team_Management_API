@@ -28,6 +28,10 @@ npm run watch
 * Alejandro Salgado
 * Jesus Mejia
 
+### Deployment
+
+URL: https://team-management-api.herokuapp.com/
+
 ### Version
 
 1.0.0
