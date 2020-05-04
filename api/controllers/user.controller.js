@@ -11,6 +11,7 @@ module.exports.getAllUsers = async (req, res) => {
 
   console.log('GET the users');
 
+
   const loggedUser = await UserModel.findOne({account:req.account});
 
   //any logged in user can see other user's info
