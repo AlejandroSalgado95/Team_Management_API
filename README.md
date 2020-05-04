@@ -1,13 +1,13 @@
-# Team_Management_API
+# Team Management API
 > This is a RESTful API made with ExpressJS and Mongoose, used for the Team Management application 
 
 ## Quick Start
 
 In order to run this project, you must do the following steps: 
 
-1) Make your own .env file. The environment variables that you need are included in the .env_sample file 
+1. Make your own .env file. The environment variables that you need are included in the .env_sample file 
 
-2) Run the following commands:
+2. Run the following commands:
 
 ```bash
 # Install dependencies for server
@@ -25,8 +25,8 @@ npm run watch
 
 ### Author
 
-Alejandro Salgado
-Jesus Mejia
+* Alejandro Salgado
+* Jesus Mejia
 
 ### Version
 
