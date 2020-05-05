@@ -20,7 +20,10 @@ app.use(function(req, res, next) {
 // Set static directory before defining routes
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Enable parsing of posted forms
+// support parsing of application/json type post data
+app.use(bodyParser.json());
+
+//support parsing of application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Add some routing
