@@ -274,6 +274,7 @@ module.exports.deleteOneUser = async (req, res) => {
 
 module.exports.login =  async (req, res) => {
   console.log('logging in user');
+  console.log("Body content", req.body);
   var account = req.body.account;
   var password = req.body.password;
 
