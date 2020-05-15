@@ -211,8 +211,9 @@ module.exports.updateOneUser = async (req, res) => {
                   .status(500)
                   .json(err);
               } else {
+                console.log(userUpdated);
                 res
-                  .status(204)
+                  .status(200)
                   .json(userUpdated);
               }
             });
