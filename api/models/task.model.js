@@ -14,7 +14,7 @@ var taskSchema = new mongoose.Schema({
 
   createdByUser : {    
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'users',
+    ref: 'User',
     required : true
   },
 
@@ -30,7 +30,7 @@ var taskSchema = new mongoose.Schema({
 
   assignedToUser : {
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'users',
+    ref: 'User',
     required : true
   },
 
