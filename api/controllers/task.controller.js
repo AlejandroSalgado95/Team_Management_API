@@ -16,6 +16,8 @@ module.exports.getAllTasks = async (req, res) => {
 
     await TaskModel
       .find({})
+      .populate("createdByUser")
+      .populate("assignedToUser")
       .exec( (err, tasks) => {
         if (err) {
           console.log("Error finding tasks");
@@ -49,6 +51,8 @@ module.exports.getTasksFromUser = async (req, res) => {
 
     await TaskModel
       .find({assignedToUser: userId})
+      .populate("createdByUser")
+      .populate("assignedToUser")
       .exec( (err, tasks) => {
         if (err) {
           console.log("Error finding tasks");
@@ -138,6 +142,8 @@ module.exports.getOneTask = async (req, res) => {
 
     await TaskModel
       .findById(id)
+      .populate("createdByUser")
+      .populate("assignedToUser")
       .exec(function(err, doc) {
         var response = {
           status : 200,
