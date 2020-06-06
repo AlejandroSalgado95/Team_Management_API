@@ -130,7 +130,7 @@ module.exports.addOneTask = async (req, res) => {
 
                   console.log("Android push token found");
                   
-                  await helpers.androidPushNotification (populatedTask.assignedToUser.android_push_token, 
+                  helpers.androidPushNotification (populatedTask.assignedToUser.android_push_token, 
                           {title: "New task assigned!", body: task.name}, {taskID: task._id}, "new_task");
                   
                   

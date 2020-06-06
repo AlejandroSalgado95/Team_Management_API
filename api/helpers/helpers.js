@@ -11,7 +11,7 @@ module.exports.androidPushNotification = async (androidPushToken, notification, 
         notification: {title: notification.title, body: notification.body, sound: 'default', tag: collapseKey},
         data: data
     };
-    fcm.send(message, function (err, response) {
+    await fcm.send(message, function (err, response) {
         if (err) {
             console.log("Error sending the message", err);
         } else {
