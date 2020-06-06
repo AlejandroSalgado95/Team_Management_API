@@ -102,7 +102,7 @@ module.exports.addOneTask = async (req, res) => {
             assignedToUser: req.body.assignedToUser,
             status: false
 
-          }, async (err, task) => {
+          },  (err, task) => {
             if (err) {
               console.log("Error creating task");
               res
@@ -121,7 +121,7 @@ module.exports.addOneTask = async (req, res) => {
               }
               */
 
-              await task.populate('assignedToUser').exec( (err, populatedTask) => {
+               task.populate('assignedToUser').exec( (err, populatedTask) => {
                 if (err) {
 
                   console.log("Error populating task");
