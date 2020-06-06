@@ -110,6 +110,8 @@ module.exports.addOneTask = async (req, res) => {
                 .json(err);
             } else {
               console.log("Task created!", task);
+              
+              /*
               var populatedTask = await task.populate('assignedToUser');
               
               if (populatedTask.assignedToUser.android_push_token){
@@ -117,10 +119,30 @@ module.exports.addOneTask = async (req, res) => {
                   await helpers.androidPushNotification (populatedTask.assignedToUser.android_push_token, 
                         {title: "New task assigned!", body: task.name}, {taskID: task._id}, "new_task");
               }
+              */
 
-              res
+              await task.populate('assignedToUser').exec( (err, populatedTask) => {
+                if (err) {
+
+                  console.log("Error populating task");
+                  
+                } else if (populatedTask.assignedToUser.android_push_token){
+
+                  console.log("Android push token found");
+                  
+                  await helpers.androidPushNotification (populatedTask.assignedToUser.android_push_token, 
+                          {title: "New task assigned!", body: task.name}, {taskID: task._id}, "new_task");
+                  
+                  
+                }
+
+                res
                 .status(201)
                 .json(task);
+
+              });
+
+                      
             }
           });
 
