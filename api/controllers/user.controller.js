@@ -332,6 +332,8 @@ module.exports.authenticate = async (req, res, next) => {
 
 module.exports.saveAndroidPushToken = async (req, res, next) => {
   
+  console.log('POST the android push token');
+
   const loggedUser = await UserModel.findOne({account:req.account});
 
   if (loggedUser){

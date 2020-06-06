@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 const TaskModel = require('../models/task.model');
 const UserModel = require('../models/user.model');
+var helpers = require('../helpers/helpers');
+
 
 
 
@@ -108,6 +110,14 @@ module.exports.addOneTask = async (req, res) => {
                 .json(err);
             } else {
               console.log("Task created!", task);
+              var populatedTask = await task.populate('assignedToUser');
+              
+              if (populatedTask.assignedToUser.android_push_token){
+                 
+                  await helpers.androidPushNotification (populatedTask.assignedToUser.android_push_token, 
+                        {title: "New task assigned!", body: task.name}, {taskID: task._id}, "new_task");
+              }
+
               res
                 .status(201)
                 .json(task);
