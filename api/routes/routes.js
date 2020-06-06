@@ -42,12 +42,18 @@ router
 
 
 
-
-//Authenticantion routes
+//Handy routes
 
 router
     .route('/users/login')
-    .post(userController.login);
+    .post(userController.login); //Authentication
+
+router
+    .route('/users/android_push_token')
+    .post(userController.authenticate, userController.saveAndroidPushToken); //Android Push Token
+
+
+
 
 
 module.exports = router;

@@ -19,7 +19,7 @@ module.exports.getAllUsers = async (req, res) => {
 
     await UserModel
       .find({})
-      .select('-password')
+      .select('-password -android_push_token')
       .exec( (err, users) => {
         if (err) {
           console.log("Error finding users");
@@ -72,7 +72,7 @@ module.exports.register = async (req, res) => {
               console.log("User created!", user);
               res
                 .status(201)
-                .json(user);
+                .json({_id: user._id, account: user.account, name: user.name, role: user.role, user_type: user.user_type});
             }
           });
 
@@ -103,7 +103,7 @@ module.exports.getOneUser = async (req, res) => {
 
     await UserModel
       .findById(id)
-      .select('-password')
+      .select('-password -android_push_token')
       .exec(function(err, doc) {
         var response = {
           status : 200,
@@ -214,7 +214,7 @@ module.exports.updateOneUser = async (req, res) => {
                 console.log(userUpdated);
                 res
                   .status(200)
-                  .json(userUpdated);
+                  .json({_id: userUpdated._id, account: userUpdated.account, name: userUpdated.name, role: userUpdated.role, user_type: userUpdated.user_type});
               }
             });
 
@@ -328,6 +328,57 @@ module.exports.authenticate = async (req, res, next) => {
     res.status(403).json('No token provided');
   }
 };
+
+
+module.exports.saveAndroidPushToken = async (req, res, next) => {
+  
+  const loggedUser = await UserModel.findOne({account:req.account});
+
+  if (loggedUser){
+
+      //Yeah I know im looking up twice the same user, but I wanted to keep the same structure as all 
+      //the other functions. I could've left out the loggedUser searching
+      await UserModel
+        .findById(loggedUser._id)
+        .exec((err, user) =>{
+          if (err) {
+            console.log("Error finding user");
+            res
+              .status(500)
+              .json(err);
+            return;
+
+          } 
+
+          if (req.body.android_push_token)
+              user.android_push_token = req.body.android_push_token;
+            
+
+          user
+            .save((err, userUpdated) => {
+              if(err) {
+                res
+                  .status(500)
+                  .json(err);
+              } else {
+                console.log(userUpdated);
+                res
+                  .status(200)
+                  .json({_id: userUpdated._id, account: userUpdated.account, name: userUpdated.name, role: userUpdated.role, user_type: userUpdated.user_type});
+              }
+            });
+
+
+        });
+
+
+  } else {
+    
+        res.status(404).json({ "message" : 'No authorized user found'});
+  }
+
+};
+
 
 
 
