@@ -102,7 +102,7 @@ module.exports.addOneTask = async (req, res) => {
             assignedToUser: req.body.assignedToUser,
             status: false
 
-          }, (err, task) => {
+          }, async (err, task) => {
             if (err) {
               console.log("Error creating task");
               res
