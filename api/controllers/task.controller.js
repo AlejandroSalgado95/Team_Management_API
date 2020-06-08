@@ -24,18 +24,19 @@ module.exports.getAllTasks = async (req, res) => {
         if (err) {
           console.log("Error finding tasks");
           res
-            .status(500)
+            .status(500) //Internal server error
             .json(err);
         } else {
           console.log("Found tasks", tasks.length);
           res
+            .status(200) //ok
             .json(tasks);
         }
       });
 
   } else {
     
-        res.status(404).json({ "message" : 'No authorized user found'});
+        res.status(401).json({ "message" : 'No authorized user found'}); //Unauthorized
   }
    
 };
@@ -59,18 +60,19 @@ module.exports.getTasksFromUser = async (req, res) => {
         if (err) {
           console.log("Error finding tasks");
           res
-            .status(500)
+            .status(500) //Internal server error
             .json(err);
         } else {
           console.log("Found tasks", tasks.length);
           res
+            .status(200) //OK
             .json(tasks);
         }
       });
 
   } else {
     
-        res.status(404).json({ "message" : 'No authorized user found'});
+        res.status(401).json({ "message" : 'No authorized user found'}); //Unauthorized
   }
 
 
@@ -91,7 +93,7 @@ module.exports.addOneTask = async (req, res) => {
     //only an admin can create more tasks
     if (loggedUser.user_type === "admin"){
 
-        await TaskModel
+        TaskModel
           .create({
             
             name: req.body.name,
@@ -102,59 +104,44 @@ module.exports.addOneTask = async (req, res) => {
             assignedToUser: req.body.assignedToUser,
             status: false
 
-          },  (err, task) => {
+          }, async (err, task) => {
+
             if (err) {
               console.log("Error creating task");
               res
-                .status(400)
+                .status(400) //Bad request
                 .json(err);
             } else {
+
               console.log("Task created!", task);
               
-              /*
-              var populatedTask = await task.populate('assignedToUser');
-              
+              var opts = [{ path: 'assignedToUser'}];
+
+              var populatedTask = await TaskModel.populate(task,opts,(err, mytask) => { console.log(mytask)});
+
               if (populatedTask.assignedToUser.android_push_token){
                  
-                  await helpers.androidPushNotification (populatedTask.assignedToUser.android_push_token, 
+                       helpers.androidPushNotification (populatedTask.assignedToUser.android_push_token, 
                         {title: "New task assigned!", body: task.name}, {taskID: task._id}, "new_task");
               }
-              */
 
-               task.populate('assignedToUser').exec( (err, populatedTask) => {
-                if (err) {
 
-                  console.log("Error populating task");
-                  
-                } else if (populatedTask.assignedToUser.android_push_token){
-
-                  console.log("Android push token found");
-                  
-                  helpers.androidPushNotification (populatedTask.assignedToUser.android_push_token, 
-                          {title: "New task assigned!", body: task.name}, {taskID: task._id}, "new_task");
-                  
-                  
-                }
-
-                res
-                .status(201)
+              res
+                .status(201) //Created
                 .json(task);
-
-              });
-
                       
             }
           });
 
     } else{
        
-        res.status(401).json({ "message" : 'Unauthorized user'});
+        res.status(401).json({ "message" : 'Unauthorized user'}); //Unauthorized
 
     }
 
   } else {
     
-        res.status(404).json({ "message" : 'No authorized user found'});
+        res.status(401).json({ "message" : 'No authorized user found'}); //Unauthorized
   }
 
 
@@ -183,11 +170,11 @@ module.exports.getOneTask = async (req, res) => {
         };
         if (err) {
           console.log("Error finding task");
-          response.status = 500;
+          response.status = 500; //Internal server error
           response.message = err;
         } else if(!doc) {
           console.log("taskId not found in database", id);
-          response.status = 404;
+          response.status = 404; //Not found
           response.message = {
             "message" : "taskId ID not found " + id
           };
@@ -199,7 +186,7 @@ module.exports.getOneTask = async (req, res) => {
 
   } else {
 
-      res.status(404).json({ "message" : 'No authorized user found'});
+      res.status(401).json({ "message" : 'No authorized user found'}); //Unauthorized
 
   }
 
@@ -282,7 +269,7 @@ module.exports.updateOneTask = async (req, res) => {
                   .json(err);
               } else {
                 res
-                  .status(204)
+                  .status(200)
                   .json(taskUpdated);
               }
             });
@@ -293,7 +280,7 @@ module.exports.updateOneTask = async (req, res) => {
 
   } else {
     
-        res.status(404).json({ "message" : 'No authorized user found'});
+        res.status(401).json({ "message" : 'No authorized user found'});
   }
 
 };
@@ -314,12 +301,12 @@ module.exports.deleteOneTask = async (req, res) => {
         .exec(function(err, task) {
           if (err) {
             res
-              .status(404)
+              .status(500) //Internal server error
               .json(err);
           } else {
             console.log("Task deleted, id:", taskId);
             res
-              .status(204)
+              .status(204) //No content
               .json();        
           }
         });
@@ -331,7 +318,7 @@ module.exports.deleteOneTask = async (req, res) => {
 
   } else {
     
-        res.status(404).json({ "message" : 'No authorized user found'});
+        res.status(401).json({ "message" : 'No authorized user found'});
   }
 
 
