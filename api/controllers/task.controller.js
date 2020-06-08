@@ -117,7 +117,11 @@ module.exports.addOneTask = async (req, res) => {
               
               var opts = [{ path: 'assignedToUser'}];
 
-              var populatedTask = await TaskModel.populate(task,opts,(err, mytask) => { console.log(mytask)});
+              //var populatedTask = await TaskModel.populate(task,opts,(err, mytask) => { console.log(mytask)});
+
+              var populatedTask = await TaskModel.findById(task._id).populate('assignedToUser');
+
+              console.log("Populated task", populatedTask):
 
               if (populatedTask.assignedToUser.android_push_token){
                  
