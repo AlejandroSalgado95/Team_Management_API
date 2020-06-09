@@ -21,7 +21,7 @@ var taskCommentSchema = new mongoose.Schema({
 
   createdOn : {
     type : Number,
-    required: true;
+    required: true
   }
 
 });
