@@ -1,5 +1,32 @@
 var mongoose = require('mongoose');
 
+var taskCommentSchema = new mongoose.Schema({
+
+  //No ref is needed for the userID because I wont use the attribute for population
+  postedBy : {
+    name : {
+      type: String,
+      required : true
+    },
+    userID : {
+      type: mongoose.Schema.Types.ObjectId,
+      required : true
+    }
+  },
+
+  content : {
+    type : String,
+    required : true
+  },
+
+  createdOn : {
+    type : Number,
+    required: true;
+  }
+
+});
+
+
 var taskSchema = new mongoose.Schema({
   name : {
     type : String,
@@ -39,7 +66,10 @@ var taskSchema = new mongoose.Schema({
     type: Boolean,
     required : true
 
-  }
+  },
+
+  taskComments : [taskCommentSchema]
+
   
 });
 

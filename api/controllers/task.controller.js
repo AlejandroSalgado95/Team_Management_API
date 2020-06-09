@@ -18,6 +18,7 @@ module.exports.getAllTasks = async (req, res) => {
 
     await TaskModel
       .find({})
+      .select('-taskComments')
       .populate("createdByUser")
       .populate("assignedToUser")
       .exec( (err, tasks) => {
@@ -54,6 +55,7 @@ module.exports.getTasksFromUser = async (req, res) => {
 
     await TaskModel
       .find({assignedToUser: userId})
+      .select('-taskComments')
       .populate("createdByUser")
       .populate("assignedToUser")
       .exec( (err, tasks) => {

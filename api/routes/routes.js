@@ -3,6 +3,8 @@ var router = new express.Router();
 
 var userController = require('../controllers/user.controller');
 var taskController = require('../controllers/task.controller');
+var commentController = require('../controllers/comment.controller');
+
 
 
 //CRUD User routes
@@ -40,6 +42,11 @@ router
     .get(userController.authenticate, taskController.getTasksFromUser); //READ
 
 
+//CRUD Comments routes
+router
+  .route('/tasks/:taskId/comments')
+  .post(userController.authenticate, commentController.addOneComment) //CREATE
+
 
 
 //Handy routes
@@ -50,7 +57,7 @@ router
 
 router
     .route('/users/android_push_token')
-    .post(userController.authenticate, userController.saveAndroidPushToken); //Android Push Token
+    .post(userController.authenticate, userController.saveAndroidPushToken); //Save Android Push Token
 
 
 
