@@ -14,10 +14,12 @@ module.exports.addOneComment = async (req, res) => {
 
     
   const loggedUser = await UserModel.findOne({account:req.account});
-  const task = await TaskModel.findById(id);
+  const task = await TaskModel.findById(id).populate('assignedToUser');
+
+  console.log("Populated task", task);
 
 
-  if (loggedUser && task && (loggedUser.user_type == "admin" || loggedUser._id == task.assignedToUser)){
+  if (loggedUser && task && (loggedUser.user_type == "admin" || task.assignedToUser._id.equals(loggedUser._id))){
 
     task.taskComments.push({
       postedBy : {
@@ -29,14 +31,24 @@ module.exports.addOneComment = async (req, res) => {
     });
 
     task.save(function(err, taskUpdated) {
-      if (err) {
-        res
-          .status(500)
-          .json(err);
-      } else {
-        res
-          .status(200)
-          .json(taskUpdated.taskComments[taskUpdated.taskComments.length - 1]);
+        if (err) {
+          res
+            .status(500)
+            .json(err);
+        } else {
+
+          var commentIndex = taskUpdated.taskComments.length - 1;
+
+          if (taskUpdated.assignedToUser.android_push_token){
+                   
+            helpers.androidPushNotification (taskUpdated.assignedToUser.android_push_token, 
+              {title: "New comment received!", body: taskUpdated.taskComments[commentIndex].content}, 
+              {taskID: taskUpdated._id}, "new_comment");
+          }
+
+          res
+            .status(200)
+            .json(taskUpdated.taskComments[commentIndex]);
       }
     });
 

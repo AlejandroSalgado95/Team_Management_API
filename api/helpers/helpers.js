@@ -1,6 +1,6 @@
 var FCM = require('fcm-node');
 
-module.exports.androidPushNotification = async (androidPushToken, notification, data, collapseKey) => {
+module.exports.androidPushNotification =  (androidPushToken, notification, data, collapseKey) => {
 
     var serverKey = process.env.FIREBASE_SERVER_KEY;//put server key here
     var fcm = new FCM(serverKey);
@@ -11,7 +11,8 @@ module.exports.androidPushNotification = async (androidPushToken, notification, 
         notification: {title: notification.title, body: notification.body, sound: 'default', tag: collapseKey},
         data: data
     };
-    await fcm.send(message, function (err, response) {
+    
+    fcm.send(message, function (err, response) {
         if (err) {
             console.log("Error sending the message", err);
         } else {
