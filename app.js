@@ -42,6 +42,13 @@ io.on('connection', socketioJwt.authorize({
   })).on('authenticated', function(socket) {
     //this socket is authenticated, we are good to handle more events from it.
     console.log('hello! ' + socket.decoded_token.account);
+    
+    socket.on('sendMessage', (message, callback) => {
+
+        io.emit('message', {text : message})
+        callback();
+    })
+
   });
 
 
@@ -50,31 +57,4 @@ server.listen(app.get('port'), function() {
   var port = server.address().port;
   console.log('server started on port ' + port);
 })
-
-
-
-
-/*
-io.on('connection', (socket) => {
-    console.log('New WebSocket connection')
-
-    socket.emit('message', 'Welcome!')
-    socket.broadcast.emit('message', 'A new user has joined!')
-
-    socket.on('sendMessage', (message, callback) => {
-        const filter = new Filter()
-
-        if (filter.isProfane(message)) {
-            return callback('Profanity is not allowed!')
-        }
-
-        io.emit('message', message)
-        callback()
-    })
-
-
-    socket.on('disconnect', () => {
-        io.emit('message', 'A user has left!')
-    })
-})*/
 
