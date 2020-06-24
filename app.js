@@ -34,8 +34,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Add some routing
 app.use('/api', routes);
 
-
 // Socket.io authentication 
+// Notes: no unauthorized socket will be able to send messages, but any unauthorized socket will be able 
+// to receive messages from other authenticated sockets during the 15 seconds said unauthorized
+// socket is connected (the unauthorized socket is conencted during the 15 seconds gap it has to send
+// his jwt and get authorized and have access to further events)
 io.on('connection', socketioJwt.authorize({
     secret: process.env.JWT_SECRET,
     timeout: 15000 // 15 seconds to send the authentication message
@@ -46,7 +49,8 @@ io.on('connection', socketioJwt.authorize({
     socket.on('sendMessage', (message, callback) => {
 
         io.emit('message', {text : message})
-        callback();
+        if (callback)
+          callback();
     })
 
   });
