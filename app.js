@@ -51,7 +51,7 @@ io.on('connection', socketioJwt.authorize({
     //this socket is authenticated, we are good to handle more events from it.
     console.log('hello! ' + socket.decoded_token.account);
     
-    socket.on('sendMessage', (message, callback) => {
+    socket.on('sendMessage', async (message, callback) => {
 
         try {
 
@@ -81,7 +81,7 @@ io.on('connection', socketioJwt.authorize({
             }
 
         } catch(e) {
-            console.log(e);
+            socket.emit("ErrorSendingMessage", {error : e});
 
         }
 
