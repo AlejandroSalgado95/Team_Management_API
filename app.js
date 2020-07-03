@@ -70,7 +70,7 @@ io.on('connection', socketioJwt.authorize({
             });
 
             if (createdMessage){
-
+              console.log(createdMessage);
               io.emit('message', {...createdMessage});
               if (callback)
                 callback();
