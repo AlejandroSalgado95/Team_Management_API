@@ -71,7 +71,16 @@ io.on('connection', socketioJwt.authorize({
 
             if (createdMessage){
               console.log(createdMessage);
-              io.emit('message', {...createdMessage});
+
+              io.emit('message', {
+                  sendedBy : {
+                  name : createdMessage.sendedBy.name,
+                  userID : createdMessage.sendedBy.userID
+                },
+                content : createdMessage.content,
+                createdOn : createdMessage.createdOn
+              });
+              
               if (callback)
                 callback();
              
