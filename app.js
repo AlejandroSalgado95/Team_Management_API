@@ -7,6 +7,11 @@ var path = require('path');
 var socketioJwt = require('socketio-jwt');
 var bodyParser = require('body-parser');
 var socketio = require('socket.io');
+var mongoose = require('mongoose');
+const MessageModel = require('./api/models/message.model');
+const UserModel = require('./api/models/user.model');
+
+
 
 var routes = require('./api/routes/routes');
 var port = process.env.PORT || process.env.MY_PORT;
@@ -48,9 +53,38 @@ io.on('connection', socketioJwt.authorize({
     
     socket.on('sendMessage', (message, callback) => {
 
-        io.emit('message', {text : message})
-        if (callback)
-          callback();
+        try {
+
+            const loggedUser = await UserModel.findOne({account: socket.decoded_token.account});
+           
+           if (!loggedUser)
+              throw "User not found";
+            
+            var createdMessage = await MessageModel.create({
+              sendedBy : {
+                name : loggedUser.name,
+                userID : loggedUser._id
+              },
+              content : message,
+              createdOn : 12345
+            });
+
+            if (createdMessage){
+
+              io.emit('message', {...createdMessage});
+              if (callback)
+                callback();
+             
+            } else {
+
+              throw "Message was not created";
+            }
+
+        } catch(e) {
+            console.log(e);
+
+        }
+
     })
 
   });
