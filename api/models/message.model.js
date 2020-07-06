@@ -9,12 +9,25 @@ var messageSchema = new mongoose.Schema({
   },
 
   sendedBy : {
-      name : {
-        type: String,
+      senderID : {
+        type : String,
         required : true
       },
-      userID : {
-        type: mongoose.Schema.Types.ObjectId,
+      account : {
+        type : String,
+        required : true
+      },
+      name : {
+        type : String,
+        required : true
+      },
+      role : {
+        type: String,
+        required : true,
+      },
+      user_type : {
+        type: String,
+        enum: ['admin', 'user'],
         required : true
       }
   },

@@ -63,7 +63,10 @@ io.on('connection', socketioJwt.authorize({
             var createdMessage = await MessageModel.create({
               sendedBy : {
                 name : loggedUser.name,
-                userID : loggedUser._id
+                senderID : loggedUser._id,
+                account: loggedUser.account,
+                role: loggedUser.role,
+                user_type: loggedUser.user_type
               },
               content : message,
               createdOn : 12345
@@ -73,9 +76,12 @@ io.on('connection', socketioJwt.authorize({
               console.log(createdMessage);
 
               io.emit('message', {
-                  sendedBy : {
+                sendedBy : {
                   name : createdMessage.sendedBy.name,
-                  userID : createdMessage.sendedBy.userID
+                  senderID : createdMessage.sendedBy.senderID,
+                  account: createdMessage.sendedBy.account,
+                  role: createdMessage.sendedBy.role,
+                  user_type: createdMessage.sendedBy.user_type
                 },
                 content : createdMessage.content,
                 createdOn : createdMessage.createdOn
