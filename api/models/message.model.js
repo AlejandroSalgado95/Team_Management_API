@@ -9,7 +9,7 @@ var messageSchema = new mongoose.Schema({
   },
 
   sendedBy : {
-      senderID : {
+      _id : {
         type : String,
         required : true
       },
