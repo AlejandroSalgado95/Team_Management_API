@@ -8,8 +8,7 @@ var socketioJwt = require('socketio-jwt');
 var bodyParser = require('body-parser');
 var socketio = require('socket.io');
 var mongoose = require('mongoose');
-const MessageModel = require('./api/models/message.model');
-const UserModel = require('./api/models/user.model');
+var messageController = require('./api/controllers/message.controller');
 
 
 
@@ -55,22 +54,8 @@ io.on('connection', socketioJwt.authorize({
 
         try {
 
-            const loggedUser = await UserModel.findOne({account: socket.decoded_token.account});
-           
-           if (!loggedUser)
-              throw "User not found";
-            
-            var createdMessage = await MessageModel.create({
-              sendedBy : {
-                name : loggedUser.name,
-                _id : loggedUser._id,
-                account: loggedUser.account,
-                role: loggedUser.role,
-                user_type: loggedUser.user_type
-              },
-              content : message,
-              createdOn : 12345
-            });
+            var sender = socket.decoded_token.account;
+            createdMessage = await messageController.addOneMessage(message,sender);
 
             if (createdMessage){
               console.log(createdMessage);

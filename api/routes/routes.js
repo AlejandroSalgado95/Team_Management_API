@@ -4,6 +4,8 @@ var router = new express.Router();
 var userController = require('../controllers/user.controller');
 var taskController = require('../controllers/task.controller');
 var commentController = require('../controllers/comment.controller');
+var messageController = require('../controllers/message.controller');
+
 
 
 
@@ -46,6 +48,11 @@ router
 router
   .route('/tasks/:taskId/comments')
   .post(userController.authenticate, commentController.addOneComment) //CREATE
+
+//CRUD Messages routes
+router
+  .route('/messages')
+  .get(userController.authenticate, messageController.getSomeMessages) //READ
 
 
 
