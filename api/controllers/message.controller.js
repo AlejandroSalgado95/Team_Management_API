@@ -17,7 +17,7 @@ module.exports.getSomeMessages = async (req, res) => {
   	var lastMessageID = req.query.last_message_id;
 
     MessageModel
-      .find({'_id'> lastMessageID})
+      .find({ _id: { $gt: lastMessageID} })
       .limit(10);
       .exec( (err, messages) => {
         if (err) {
