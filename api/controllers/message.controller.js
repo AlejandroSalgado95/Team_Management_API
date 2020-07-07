@@ -14,25 +14,36 @@ module.exports.getSomeMessages = async (req, res) => {
   //any logged in user can see all existing tasks
   if (loggedUser){
 
-  	var lastMessageID = req.query.last_message_id;
+    var messages = null; 
 
-    MessageModel
-      .find({ _id: { $gt: lastMessageID} })
-      .limit(10)
-      .exec( (err, messages) => {
-        if (err) {
-          console.log("Error finding messages");
-          res
-            .status(500) //Internal server error
-            .json(err);
-        } else {
-          console.log("Found messages", messages.length);
-          res
-            .status(200) //ok
-            .json(messages);
-        }
-      });
+    if (req.query.last_message_id){
+    	
+      var lastMessageID = req.query.last_message_id;
 
+      messages = await MessageModel.find({ _id: { $gt: lastMessageID} }).limit(10);
+
+
+    } else {
+
+      messages = await MessageModel.find({}).limit(10);
+
+    }
+
+    if (messages){
+
+      res
+        .status(200)
+        .json(messages);
+
+    } else {
+
+      res
+        .status(500)
+        .json({"message": "No messages found" });
+
+
+    }
+  
   } else {
     
         res.status(401).json({ "message" : 'No authorized user found'}); //Unauthorized
