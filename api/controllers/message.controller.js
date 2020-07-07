@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 const UserModel = require('../models/user.model');
-const MessageModel = require('./api/models/message.model');
+const MessageModel = require('../models/message.model');
 
 
 
