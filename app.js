@@ -69,7 +69,7 @@ io.on('connection', socketioJwt.authorize({
                   user_type: createdMessage.sendedBy.user_type
                 },
                 content : createdMessage.content,
-                createdOn : createdMessage.createdOn
+                date : createdMessage.date
               });
               
               if (callback)
