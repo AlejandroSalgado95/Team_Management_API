@@ -72,7 +72,7 @@ module.exports.addOneMessage = async (message, sender) => {
          user_type: loggedUser.user_type
       },
       content : message,
-      date : Date.now
+      date : Date.now()
   });
 
   if (createdMessage)
