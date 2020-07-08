@@ -33,7 +33,7 @@ var messageSchema = new mongoose.Schema({
   },
 
   createdOn : {
-    type : Number,
+    type : Date,
     required: true
   }
 

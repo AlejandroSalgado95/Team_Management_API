@@ -20,12 +20,12 @@ module.exports.getSomeMessages = async (req, res) => {
     	
       var lastMessageID = req.query.last_message_id;
 
-      messages = await MessageModel.find({ _id: { $gt: lastMessageID} }).limit(10);
+      messages = await MessageModel.find({ _id: { $gt: lastMessageID} }).sort('-date').limit(10);
 
 
     } else {
 
-      messages = await MessageModel.find({}).limit(10);
+      messages = await MessageModel.find({}).sort('-date').limit(10);
 
     }
 
@@ -72,7 +72,7 @@ module.exports.addOneMessage = async (message, sender) => {
          user_type: loggedUser.user_type
       },
       content : message,
-      createdOn : 12345
+      createdOn : Date.now
   });
 
   if (createdMessage)
