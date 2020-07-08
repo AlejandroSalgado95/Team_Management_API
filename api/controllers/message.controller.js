@@ -17,13 +17,17 @@ module.exports.getSomeMessages = async (req, res) => {
     var messages = null; 
 
     if (req.query.last_message_id){
+
+      console.log("RECEIVED QUERY PARAMS", req.query.last_message_id);
     	
       var lastMessageID = req.query.last_message_id;
 
-      messages = await MessageModel.find({ _id: { $gt: lastMessageID} }).sort('-date').limit(10);
+      messages = await MessageModel.find({ _id: { $lt: lastMessageID} }).sort('-date').limit(10);
 
 
     } else {
+
+      console.log("DID NOT RECEIVE QUERY PARAMS");
 
       messages = await MessageModel.find({}).sort('-date').limit(10);
 
