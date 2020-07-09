@@ -27,7 +27,7 @@ module.exports.getSomeMessages = async (req, res) => {
 
     } else {
 
-      console.log("DID NOT RECEIVE QUERY PARAMS");
+      console.log("DID NOT RECEIVE QUERY PARAMS", req.query);
 
       messages = await MessageModel.find({}).sort('-date').limit(10);
 
