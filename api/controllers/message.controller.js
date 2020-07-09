@@ -18,7 +18,7 @@ module.exports.getSomeMessages = async (req, res) => {
 
     if (req.query.last_message_id){
 
-      console.log("RECEIVED QUERY PARAMS", req.query.last_message_id);
+      console.log("RECEIVED QUERY PARAMS", req.query);
     	
       var lastMessageID = req.query.last_message_id;
 
