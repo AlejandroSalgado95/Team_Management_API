@@ -106,7 +106,7 @@ io.use(function(socket, next) {
 io.on('connect', async socket => {
 
     console.log("SOCKET SESSION ID:", socket.request._query['session_id']);
-    socketSessionId = socket.request._query['session_id']
+    socketSessionId = socket.request._query['session_id'];
 
      SessionModel
         .findById(socketSessionId)
