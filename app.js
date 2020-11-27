@@ -94,12 +94,19 @@ io.on('connection', socketioJwt.authorize({
 
   });*/
   
-
 /*
-io.on('connect', socket => {
+io.use(function(socket, next) {
+  var handshakeData = socket.request;
 
+  var data = handshakeData._query['auth_token'];
+});
+*/
+
+io.on('connect', socket => {
+    console.log("SOCKET SESSION ID:", socket.request._query['session_id']);
     socket.on('sendMessage', async (message, callback) => {
 
+        /*
         try {
 
             var sender = socket.decoded_token.account;
@@ -131,12 +138,14 @@ io.on('connect', socket => {
         } catch(e) {
             socket.emit("ErrorSendingMessage", {success: false, message: e});
 
-        }
+        }*/
+        console.log("MESSAGE RECEIVED FROM SESSION:", socket.request._query['session_id']);
+
 
     })
 
 
-});*/
+});
 
 
 
