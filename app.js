@@ -109,7 +109,7 @@ io.on('connect', async socket => {
     socketSessionId = socket.request._query['session_id'];
 
      await SessionModel
-        .findById(socketSessionId )
+        .find({session_id: socketSessionId} )
         .exec( (err, session) =>{
           if (err) {
             console.log("Socket is not authenticated");
