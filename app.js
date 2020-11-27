@@ -9,7 +9,7 @@ var socketio = require('socket.io');
 var mongoose = require('mongoose');
 var helpers = require('./api/helpers/helpers');
 const cookieParser = require('cookie-parser');
-const SessionModel = require('../models/session.model');
+const SessionModel = require('./api/models/session.model');
 
 
 
