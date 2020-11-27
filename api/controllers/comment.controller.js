@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 const TaskModel = require('../models/task.model');
 const UserModel = require('../models/user.model');
 var helpers = require('../helpers/helpers');
+const SessionModel = require('../models/session.model');
 
 
 
