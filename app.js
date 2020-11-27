@@ -103,14 +103,14 @@ io.use(function(socket, next) {
 });
 */
 
-io.on('connect', socket => {
+io.on('connect', async socket => {
 
     console.log("SOCKET SESSION ID:", socket.request._query['session_id']);
     socketSessionId = socket.request._query['session_id']
 
-    await SessionModel
+     SessionModel
         .findById(socketSessionId)
-        .exec((err, session) =>{
+        .exec(async (err, session) =>{
           if (err) {
             console.log("Socket is not authenticated");
             socket.disconnect();
