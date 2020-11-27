@@ -108,9 +108,9 @@ io.on('connect', async socket => {
     console.log("SOCKET SESSION ID:", socket.request._query['session_id']);
     socketSessionId = socket.request._query['session_id'];
 
-     SessionModel
-        .findById(socketSessionId)
-        .exec(async (err, session) =>{
+     await SessionModel
+        .findById(socketSessionId = )
+        .exec( (err, session) =>{
           if (err) {
             console.log("Socket is not authenticated");
             socket.disconnect();
@@ -122,15 +122,24 @@ io.on('connect', async socket => {
 
           } else{
 
+              console.log("SOCKET IS AUTHENTICATED");
+              socket.session_id = socketSessionId;
+              socket.session_account = session.account;
 
-              socket.on('sendMessage', async (message, callback) => {
+          }
+
+        });
+
+        socket.on('sendMessage', async (message, callback) => {
                 
-                console.log("MESSAGE RECEIVED FROM SESSION:", socket.request._query['session_id']);
+                if (!socket.session_account){
+                    console.log("NO SENDER FOUND IN MESSAGE")
+                    socket.disconnect();
+                } else{
 
-                  
                   try {
-
-                      var sender = session.account;
+                      console.log("MESSAGE RECEIVED FROM SESSION:", socket.session_id);
+                      var sender = socket.session_account;
                       createdMessage = await helpers.addOneMessage(message,sender);
 
                       if (createdMessage){
@@ -161,16 +170,10 @@ io.on('connect', async socket => {
 
                   }
 
+                }
+                  
 
               })
-
-
-
-          }
-
-
-
-        });
 
 
 
