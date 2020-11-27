@@ -9,6 +9,7 @@ var socketio = require('socket.io');
 var mongoose = require('mongoose');
 var helpers = require('./api/helpers/helpers');
 const cookieParser = require('cookie-parser');
+const SessionModel = require('../models/session.model');
 
 
 
@@ -103,46 +104,74 @@ io.use(function(socket, next) {
 */
 
 io.on('connect', socket => {
+
     console.log("SOCKET SESSION ID:", socket.request._query['session_id']);
-    socket.on('sendMessage', async (message, callback) => {
+    socketSessionId = socket.request._query['session_id']
 
-        /*
-        try {
+    await SessionModel
+        .findById(socketSessionId)
+        .exec((err, session) =>{
+          if (err) {
+            console.log("Socket is not authenticated");
+            socket.disconnect();
 
-            var sender = socket.decoded_token.account;
-            createdMessage = await helpers.addOneMessage(message,sender);
+            res
+              .status(500)
+              .json(err);
+            return;
 
-            if (createdMessage){
-              console.log(createdMessage);
-
-              io.emit('message', {
-                sendedBy : {
-                  name : createdMessage.sendedBy.name,
-                  _id : createdMessage.sendedBy._id,
-                  account: createdMessage.sendedBy.account,
-                  role: createdMessage.sendedBy.role,
-                  user_type: createdMessage.sendedBy.user_type
-                },
-                content : createdMessage.content,
-                date : createdMessage.date
-              });
-              
-              if (callback)
-                callback();
-             
-            } else {
-
-              throw "Failed to deliver message";
-            }
-
-        } catch(e) {
-            socket.emit("ErrorSendingMessage", {success: false, message: e});
-
-        }*/
-        console.log("MESSAGE RECEIVED FROM SESSION:", socket.request._query['session_id']);
+          } else{
 
 
-    })
+              socket.on('sendMessage', async (message, callback) => {
+                
+                console.log("MESSAGE RECEIVED FROM SESSION:", socket.request._query['session_id']);
+
+                  
+                  try {
+
+                      var sender = session.account;
+                      createdMessage = await helpers.addOneMessage(message,sender);
+
+                      if (createdMessage){
+                        console.log(createdMessage);
+
+                        io.emit('message', {
+                          sendedBy : {
+                            name : createdMessage.sendedBy.name,
+                            _id : createdMessage.sendedBy._id,
+                            account: createdMessage.sendedBy.account,
+                            role: createdMessage.sendedBy.role,
+                            user_type: createdMessage.sendedBy.user_type
+                          },
+                          content : createdMessage.content,
+                          date : createdMessage.date
+                        });
+                        
+                        if (callback)
+                          callback();
+                       
+                      } else {
+
+                        throw "Failed to deliver message";
+                      }
+
+                  } catch(e) {
+                      socket.emit("ErrorSendingMessage", {success: false, message: e});
+
+                  }
+
+
+              })
+
+
+
+          }
+
+
+
+        });
+
 
 
 });
