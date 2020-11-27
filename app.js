@@ -115,10 +115,6 @@ io.on('connect', async socket => {
             console.log("Socket is not authenticated");
             socket.disconnect();
 
-            res
-              .status(500)
-              .json(err);
-            return;
 
           } else{
 
