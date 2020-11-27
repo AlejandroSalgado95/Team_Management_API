@@ -56,32 +56,3 @@ module.exports.getSomeMessages = async (req, res) => {
 };
 
 
-
-//This method is not called through a HTTP request, nor being routed. This method is being used
-//within the socket.io protocol
-module.exports.addOneMessage = async (message, sender) => {
-  console.log("POST new message");
-
-  const loggedUser = await UserModel.findOne({account: sender});
-           
-  if (!loggedUser)
-      return ;
-            
-  var createdMessage = await MessageModel.create({
-      sendedBy : {
-         name : loggedUser.name,
-         _id : loggedUser._id,
-         account: loggedUser.account,
-         role: loggedUser.role,
-         user_type: loggedUser.user_type
-      },
-      content : message,
-      date : Date.now()
-  });
-
-  if (createdMessage)
-  	return createdMessage;
-  else 
-  	return;
-};
-

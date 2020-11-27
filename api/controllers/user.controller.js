@@ -1,8 +1,7 @@
-require('dotenv').config();
 var mongoose = require('mongoose');
 const UserModel = require('../models/user.model');
+const SessionModel = require('../models/session.model');
 var bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken');
 
 
 
@@ -231,10 +230,11 @@ module.exports.updateOneUser = async (req, res) => {
 
 
 module.exports.deleteOneUser = async (req, res) => {
-  var userId = req.params.userId;
 
-  const userToDelete = await UserModel.findById(userId);
+  const userToDelete = await UserModel.findById(req.params.userId);
   const loggedUser = await UserModel.findOne({account:req.account});
+
+  console.log("logged in account:", loggedUser.account);
 
   if (loggedUser){
 
@@ -242,21 +242,34 @@ module.exports.deleteOneUser = async (req, res) => {
     //a user can only delete itself
     if (loggedUser.user_type === "admin" || userToDelete.account === loggedUser.account){
 
-     
-      await UserModel
-        .findByIdAndRemove(userId)
-        .exec(function(err, user) {
-          if (err) {
-            res
-              .status(404)
-              .json(err);
-          } else {
-            console.log("User deleted, id:", userId);
-            res
-              .status(204)
-              .json();        
-          }
+
+        if (userToDelete.account === loggedUser.account){
+            res.cookie('session-id', null, { maxAge: 0 }); 
+            //res.cookies['session-id'].expires = Date.now();
+
+        }
+
+
+        UserModel
+              .findByIdAndRemove(req.params.userId)
+              .exec(async (err, user) => {
+                if (err) {
+                  res
+                    .status(500)
+                    .json(err);
+                } else {
+
+                  await SessionModel.deleteMany({ account: userToDelete.account });
+
+                  console.log("User deleted:", userToDelete.account);
+                  res
+                    .status(200)
+                    .json();        
+                }
+                
         });
+
+      
 
     } else {
 
@@ -271,115 +284,6 @@ module.exports.deleteOneUser = async (req, res) => {
 
 };
 
-
-
-module.exports.login =  async (req, res) => {
-  console.log('logging in user');
-  console.log("Body content", req.body);
-  var account = req.body.account;
-  var password = req.body.password;
-
-  UserModel.findOne({
-    account: account
-  }).exec(function(err, user) {
-
-    console.log(user);
-
-    if (err) {
-      console.log(err);
-      res.status(400).json(err);
-    } else {
-      if (user){
-      
-        if (bcrypt.compareSync(password, user.password)) {
-          console.log('User found', user);
-          var token = jwt.sign({ account: user.account }, process.env.JWT_SECRET, { expiresIn: 3600 });
-          res.status(200).json({success: true, token: token, userinfo: {_id: user._id, account: user.account, name: user.name, role: user.role, user_type: user.user_type} });
-        } else {
-          res.status(401).json('Unauthorized');
-        }
-
-      } else {
-
-          res.status(404).json({ "message" : 'No user found'});
-
-      }
-      
-    }
-  });
-};
-
-
-
-module.exports.authenticate = async (req, res, next) => {
-  var authHeader = req.headers.authorization;
-  if (authHeader) {
-    var token = req.headers.authorization.split(' ')[1]; //--> Authorization Bearer xxx
-    jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
-      if (error) {
-        console.log(error);
-        res.status(401).json('Unauthorized');
-      } else {
-        req.account = decoded.account;
-        next();
-      }
-    });
-  } else {
-    res.status(403).json('No token provided');
-  }
-};
-
-
-module.exports.saveAndroidPushToken = async (req, res, next) => {
-  
-  console.log('POST the android push token');
-
-  const loggedUser = await UserModel.findOne({account:req.account});
-
-  if (loggedUser){
-
-      //Yeah I know im looking up twice the same user, but I wanted to keep the same structure as all 
-      //the other functions. I could've left out the loggedUser searching
-      await UserModel
-        .findById(loggedUser._id)
-        .exec((err, user) =>{
-          if (err) {
-            console.log("Error finding user");
-            res
-              .status(500)
-              .json(err);
-            return;
-
-          } 
-
-          if (req.body.android_push_token)
-              user.android_push_token = req.body.android_push_token;
-            
-
-          user
-            .save((err, userUpdated) => {
-              if(err) {
-                res
-                  .status(500)
-                  .json(err);
-              } else {
-                console.log(userUpdated);
-                res
-                  .status(200)
-                  .json({_id: userUpdated._id, account: userUpdated.account, name: userUpdated.name, role: userUpdated.role, user_type: userUpdated.user_type});
-              }
-            });
-
-
-        });
-
-
-  } else {
-    
-        res.status(404).json({ "message" : 'No authorized user found'});
-  }
-
-};
 
 
 

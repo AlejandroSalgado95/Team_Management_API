@@ -4,11 +4,11 @@ var express = require('express');
 var http = require('http');
 var app = express();
 var path = require('path');
-var socketioJwt = require('socketio-jwt');
 var bodyParser = require('body-parser');
 var socketio = require('socket.io');
 var mongoose = require('mongoose');
-var messageController = require('./api/controllers/message.controller');
+var helpers = require('./api/helpers/helpers');
+const cookieParser = require('cookie-parser');
 
 
 
@@ -19,6 +19,11 @@ var io = socketio(server);
 
 // Define the port to run on
 app.set('port', port);
+
+//secure attributed cookies requires HTTPS. if the Node app is behind a proxy (like Nginx), we will have to set proxy to true
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); 
+}
 
 // Add middleware to console log every request
 app.use(function(req, res, next) {
@@ -35,14 +40,14 @@ app.use(bodyParser.json());
 //support parsing of application/x-www-form-urlencoded post data
 app.use(bodyParser.urlencoded({ extended: false }));
 
+//parse client cookies from incoming http requests
+app.use(cookieParser());
+
 // Add some routing
 app.use('/api', routes);
 
-// Socket.io authentication 
-// Notes: no unauthorized socket will be able to send messages, but any unauthorized socket will be able 
-// to receive messages from other authenticated sockets during the 15 seconds said unauthorized
-// socket is connected (the unauthorized socket is conencted during the 15 seconds gap it has to send
-// his jwt and get authorized and have access to further events)
+
+/*
 io.on('connection', socketioJwt.authorize({
     secret: process.env.JWT_SECRET,
     timeout: 15000 // 15 seconds to send the authentication message
@@ -55,7 +60,7 @@ io.on('connection', socketioJwt.authorize({
         try {
 
             var sender = socket.decoded_token.account;
-            createdMessage = await messageController.addOneMessage(message,sender);
+            createdMessage = await helpers.addOneMessage(message,sender);
 
             if (createdMessage){
               console.log(createdMessage);
@@ -87,7 +92,52 @@ io.on('connection', socketioJwt.authorize({
 
     })
 
-  });
+  });*/
+  
+
+/*
+io.on('connect', socket => {
+
+    socket.on('sendMessage', async (message, callback) => {
+
+        try {
+
+            var sender = socket.decoded_token.account;
+            createdMessage = await helpers.addOneMessage(message,sender);
+
+            if (createdMessage){
+              console.log(createdMessage);
+
+              io.emit('message', {
+                sendedBy : {
+                  name : createdMessage.sendedBy.name,
+                  _id : createdMessage.sendedBy._id,
+                  account: createdMessage.sendedBy.account,
+                  role: createdMessage.sendedBy.role,
+                  user_type: createdMessage.sendedBy.user_type
+                },
+                content : createdMessage.content,
+                date : createdMessage.date
+              });
+              
+              if (callback)
+                callback();
+             
+            } else {
+
+              throw "Failed to deliver message";
+            }
+
+        } catch(e) {
+            socket.emit("ErrorSendingMessage", {success: false, message: e});
+
+        }
+
+    })
+
+
+});*/
+
 
 
 // Listen for requests

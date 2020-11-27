@@ -1,6 +1,9 @@
 var FCM = require('fcm-node');
+const UserModel = require('../models/user.model');
+const MessageModel = require('../models/message.model');
 
-module.exports.androidPushNotification =  (androidPushToken, notification, data, collapseKey) => {
+
+module.exports.sendAndroidPushNotification =  (androidPushToken, notification, data, collapseKey) => {
 
     var serverKey = process.env.FIREBASE_SERVER_KEY;//put server key here
     var fcm = new FCM(serverKey);
@@ -21,3 +24,31 @@ module.exports.androidPushNotification =  (androidPushToken, notification, data,
 
     });
 };
+
+module.exports.addOneMessage = async (message, sender) => {
+  console.log("POST new message");
+
+  const loggedUser = await UserModel.findOne({account: sender});
+           
+  if (!loggedUser)
+      return ;
+            
+  var createdMessage = await MessageModel.create({
+      sendedBy : {
+         name : loggedUser.name,
+         _id : loggedUser._id,
+         account: loggedUser.account,
+         role: loggedUser.role,
+         user_type: loggedUser.user_type
+      },
+      content : message,
+      date : Date.now()
+  });
+
+  if (createdMessage)
+    return createdMessage;
+  else 
+    return;
+};
+
+

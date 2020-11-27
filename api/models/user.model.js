@@ -23,9 +23,6 @@ var userSchema = new mongoose.Schema({
     type: String,
     enum: ['admin', 'user'],
     required : true
-  },
-  android_push_token: {
-    type: String
   }
 
 });

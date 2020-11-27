@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 const TaskModel = require('../models/task.model');
 const UserModel = require('../models/user.model');
 var helpers = require('../helpers/helpers');
+const SessionModel = require('../models/session.model');
 
 
 
@@ -117,19 +118,30 @@ module.exports.addOneTask = async (req, res) => {
 
               console.log("Task created!", task);
               
-              var opts = [{ path: 'assignedToUser'}];
 
-              //var populatedTask = await TaskModel.populate(task,opts,(err, mytask) => { console.log(mytask)});
+              var populatedTask = await TaskModel.findById(task._id).populate('assignedToUser');              
 
-              var populatedTask = await TaskModel.findById(task._id).populate('assignedToUser');
+              SessionModel
+                .find({account: populatedTask.assignedToUser.account})
+                .exec( (err, sessions) => {
+                  if (err) {
+                    console.log("Error finding sessions");
+                  } else {
+                    console.log("Found sessions", sessions.length);
+                    
+                    sessions.map(someSession => {
 
-              console.log("Populated task", populatedTask);
+                      if (someSession.android_push_token){
+                         
+                            helpers.sendAndroidPushNotification (someSession.android_push_token, 
+                                {title: "New task assigned!", body: task.name}, {taskID: task._id}, "new_task");
+                      }
 
-              if (populatedTask.assignedToUser.android_push_token){
-                 
-                       helpers.androidPushNotification (populatedTask.assignedToUser.android_push_token, 
-                        {title: "New task assigned!", body: task.name}, {taskID: task._id}, "new_task");
-              }
+
+                    })
+
+                  }
+                });
 
 
               res
@@ -268,12 +280,38 @@ module.exports.updateOneTask = async (req, res) => {
 
 
           task
-            .save((err, taskUpdated) => {
+            .save(async (err, taskUpdated) => {
               if(err) {
                 res
                   .status(500)
                   .json(err);
               } else {
+
+
+                var populatedTask = await TaskModel.findById(taskUpdated._id).populate('assignedToUser');              
+
+                SessionModel
+                  .find({account: populatedTask.assignedToUser.account})
+                  .exec( (err, sessions) => {
+                    if (err) {
+                      console.log("Error finding sessions");
+                    } else {
+                      console.log("Found sessions", sessions.length);
+                      
+                      sessions.map(someSession => {
+
+                        if (someSession.android_push_token){
+                           
+                              helpers.sendAndroidPushNotification (someSession.android_push_token, 
+                                  {title: "A task was updated!", body: taskUpdated.name}, {taskID: taskUpdated._id}, "updated_task");
+                        }
+
+                      })
+
+                    }
+                  });
+
+
                 res
                   .status(200)
                   .json(taskUpdated);
