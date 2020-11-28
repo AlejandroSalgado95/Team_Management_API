@@ -122,20 +122,16 @@ io.on('connect', async socket => {
               socket.session_id = socketSessionId;
               socket.session_account = session.account;
 
-          }
-
-        });
-
-        socket.on('sendMessage', async function (message, callback) {
+              socket.on('sendMessage', async function (message, callback) {
                 
-                if (!this.session_account){
+                if (!socket.session_account){
                     console.log("NO SENDER FOUND IN MESSAGE")
                     socket.disconnect();
                 } else{
 
                   try {
-                      console.log("MESSAGE RECEIVED FROM SESSION:", this.session_id);
-                      var sender = this.session_account;
+                      console.log("MESSAGE RECEIVED FROM SESSION:", socket.session_id);
+                      var sender = socket.session_account;
                       createdMessage = await helpers.addOneMessage(message,sender);
 
                       if (createdMessage){
@@ -170,6 +166,11 @@ io.on('connect', async socket => {
                   
 
               })
+          }
+
+        });
+
+
 
 
 
