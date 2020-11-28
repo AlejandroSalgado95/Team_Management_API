@@ -120,7 +120,7 @@ io.on('connect', async socket => {
 
               console.log("SOCKET IS AUTHENTICATED");
               socket.session_id = socketSessionId;
-              socket.session_account = session.account;
+              socket.session_account = session[0].account;
 
           }
 
@@ -139,10 +139,10 @@ io.on('connect', async socket => {
 
                   sessionRetrieved = await SessionModel.find({session_id: dataReceived.session_id} );
                   
-                  if (sessionRetrieved.account){
+                  if (sessionRetrieved[0].account){
                     try {
-                        console.log("MESSAGE RECEIVED FROM SESSION:", sessionRetrieved.session_id);
-                        var sender = sessionRetrieved.account;
+                        console.log("MESSAGE RECEIVED FROM SESSION:", sessionRetrieved[0].session_id);
+                        var sender = sessionRetrieved[0].account;
                         createdMessage = await helpers.addOneMessage(dataReceived.message,sender);
 
                         if (createdMessage){
