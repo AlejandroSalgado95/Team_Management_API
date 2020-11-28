@@ -175,6 +175,7 @@ io.on('connect', async socket => {
                   } else {
 
                     console.log("Socket sender is not valid");
+                    console.log(sessionRetrieved);
                     socket.disconnect();
 
                   }
