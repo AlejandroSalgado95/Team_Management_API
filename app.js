@@ -122,53 +122,67 @@ io.on('connect', async socket => {
               socket.session_id = socketSessionId;
               socket.session_account = session.account;
 
-              socket.on('sendMessage', async function (message, callback) {
+          }
+
+
+      });
+
+
+      socket.on('sendMessage', async function (dataReceived, callback) {
                 
-                if (!socket.session_account){
-                    console.log("NO SENDER FOUND IN MESSAGE")
+                console.log(dataReceived);
+
+                if (!dataReceived.session_id){
+                    console.log("NO SENDER FOUND IN MESSAGE");
                     socket.disconnect();
                 } else{
 
-                  try {
-                      console.log("MESSAGE RECEIVED FROM SESSION:", socket.session_id);
-                      var sender = socket.session_account;
-                      createdMessage = await helpers.addOneMessage(message,sender);
+                  sessionRetrieved = await SessionModel.find({session_id: dataReceived.session_id} );
+                  
+                  if (sessionRetrieved.account){
+                    try {
+                        console.log("MESSAGE RECEIVED FROM SESSION:", sessionRetrieved.session_id);
+                        var sender = sessionRetrieved.account;
+                        createdMessage = await helpers.addOneMessage(dataReceived.message,sender);
 
-                      if (createdMessage){
-                        console.log(createdMessage);
+                        if (createdMessage){
+                          console.log(createdMessage);
 
-                        io.emit('message', {
-                          sendedBy : {
-                            name : createdMessage.sendedBy.name,
-                            _id : createdMessage.sendedBy._id,
-                            account: createdMessage.sendedBy.account,
-                            role: createdMessage.sendedBy.role,
-                            user_type: createdMessage.sendedBy.user_type
-                          },
-                          content : createdMessage.content,
-                          date : createdMessage.date
-                        });
-                        
-                        if (callback)
-                          callback();
-                       
-                      } else {
+                          io.emit('message', {
+                            sendedBy : {
+                              name : createdMessage.sendedBy.name,
+                              _id : createdMessage.sendedBy._id,
+                              account: createdMessage.sendedBy.account,
+                              role: createdMessage.sendedBy.role,
+                              user_type: createdMessage.sendedBy.user_type
+                            },
+                            content : createdMessage.content,
+                            date : createdMessage.date
+                          });
+                          
+                          if (callback)
+                            callback();
+                         
+                        } else {
 
-                        throw "Failed to deliver message";
-                      }
+                          throw "Failed to deliver message";
+                        }
 
-                  } catch(e) {
-                      socket.emit("ErrorSendingMessage", {success: false, message: e});
+                    } catch(e) {
+                        socket.emit("ErrorSendingMessage", {success: false, message: e});
+
+                    }
+                  } else {
+
+                    console.log("Socket sender is not valid");
+                    socket.disconnect();
 
                   }
 
                 }
                   
 
-              })
-          }
-
-        });
+      })
 
 
 
