@@ -121,7 +121,7 @@ io.on('connect', async socket => {
               if (session){
                 console.log("SOCKET IS AUTHENTICATED");
                 socket.session_id = socketSessionId;
-                socket.session_account = session[0].account;
+                //socket.session_account = session[0].account;
               }
 
           }
