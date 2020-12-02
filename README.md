@@ -26,7 +26,6 @@ npm run watch
 ### Author
 
 * Alejandro Salgado
-* Jesus Mejia
 
 ### Deployment
 
