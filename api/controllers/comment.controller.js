@@ -40,28 +40,30 @@ module.exports.addOneComment = async (req, res) => {
 
           var commentIndex = taskUpdated.taskComments.length - 1;
 
-          SessionModel
-            .find({account: taskUpdated.assignedToUser.account})
-            .exec( (err, sessions) => {
-              if (err) {
-                console.log("Error finding sessions");
-              } else {
-                console.log("Found sessions", sessions.length);
-                      
-                sessions.map(someSession => {
+          if (taskUpdated.assignedToUser != null){
+              SessionModel
+                .find({account: taskUpdated.assignedToUser.account})
+                .exec( (err, sessions) => {
+                  if (err) {
+                    console.log("Error finding sessions");
+                  } else {
+                    console.log("Found sessions", sessions.length);
+                          
+                    sessions.map(someSession => {
 
-                  if (someSession.android_push_token){
-                           
-                    helpers.sendAndroidPushNotification (someSession.android_push_token, 
-                    {title: "New comment received!", body: taskUpdated.taskComments[commentIndex].content}, 
-                    {taskID: taskUpdated._id}, "new_comment");
+                      if (someSession.android_push_token){
+                               
+                        helpers.sendAndroidPushNotification (someSession.android_push_token, 
+                        {title: "New comment received!", body: taskUpdated.taskComments[commentIndex].content}, 
+                        {taskID: taskUpdated._id}, "new_comment");
+
+                      }
+
+                    })
 
                   }
-
-                })
-
-              }
-            });
+                });
+            }
 
 
 
