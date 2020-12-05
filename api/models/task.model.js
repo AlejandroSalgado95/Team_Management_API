@@ -42,7 +42,7 @@ var taskSchema = new mongoose.Schema({
   createdByUser : {    
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User',
-    required : true
+    required : false
   },
 
   creationDate : {
@@ -58,7 +58,7 @@ var taskSchema = new mongoose.Schema({
   assignedToUser : {
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User',
-    required : true
+    required : false
   },
 
   status: {

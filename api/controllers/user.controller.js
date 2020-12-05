@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 const UserModel = require('../models/user.model');
 const SessionModel = require('../models/session.model');
+const TaskModel = require('../models/task.model');
 var bcrypt = require('bcrypt');
 
 
@@ -234,16 +235,17 @@ module.exports.deleteOneUser = async (req, res) => {
   const userToDelete = await UserModel.findById(req.params.userId);
   const loggedUser = await UserModel.findOne({account:req.account});
 
+  var userToDeleteAccount = userToDelete.account;
   console.log("logged in account:", loggedUser.account);
 
   if (loggedUser){
 
     //an admin can delete either an user or another admin
     //a user can only delete itself
-    if (loggedUser.user_type === "admin" || userToDelete.account === loggedUser.account){
+    if (loggedUser.user_type === "admin" || userToDeleteAccount === loggedUser.account){
 
 
-        if (userToDelete.account === loggedUser.account){
+        if (userToDeleteAccount === loggedUser.account){
             res.cookie('session-id', null, { maxAge: 0 }); 
             //res.cookies['session-id'].expires = Date.now();
 
@@ -259,12 +261,31 @@ module.exports.deleteOneUser = async (req, res) => {
                     .json(err);
                 } else {
 
-                  await SessionModel.deleteMany({ account: userToDelete.account });
+                  await SessionModel.deleteMany({ account: userToDeleteAccount });
+                  await TaskModel.find({$or:[{createdByUser: req.params.userId},{assignedToUser:req.params.userId}]}, function(err, tasks) 
+                   {
+                        tasks.map(async someTask => {
 
-                  console.log("User deleted:", userToDelete.account);
+                            if (someTask.createdByUser == req.params.userId){
+                                someTask.createdByUser = null;
+                            
+                            } else if (someTask.assignedToUser == req.params.userId){
+                                someTask.assignedToUser = null;
+
+                            }
+                            
+                            someTask.save();
+                        
+                        })
+
+                      
+                   });
+
+                  console.log("User deleted:", userToDeleteAccount);
                   res
                     .status(200)
                     .json();        
+
                 }
                 
         });
