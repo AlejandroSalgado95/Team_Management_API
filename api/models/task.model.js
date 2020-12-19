@@ -20,7 +20,7 @@ var taskCommentSchema = new mongoose.Schema({
   },
 
   createdOn : {
-    type : Number,
+    type : Date,
     required: true
   }
 
@@ -46,13 +46,13 @@ var taskSchema = new mongoose.Schema({
   },
 
   creationDate : {
-    type : Number,
+    type : Date,
     required : true
   },
 
   dueDate : {
-    type : Number,
-    required : true
+    type : Date,
+    required : false
   },
 
   assignedToUser : {

@@ -102,7 +102,7 @@ module.exports.addOneTask = async (req, res) => {
             name: req.body.name,
             description: req.body.description,
             createdByUser: loggedUser._id,
-            creationDate: req.body.creationDate,
+            creationDate: Date.now(),
             dueDate: req.body.dueDate,
             assignedToUser: req.body.assignedToUser,
             status: false
