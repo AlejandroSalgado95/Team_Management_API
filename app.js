@@ -36,9 +36,6 @@ app.use(function(req, res, next) {
 // Set static directory before defining routes
 app.use(express.static(path.join(__dirname, 'public')));
 
-//A tiny, accurate, fast Express middleware for single page apps with client side routing.
-app.use(fallback('index.html', { root: path.join(__dirname, 'public')}))
-
 // support parsing of application/json type post data
 app.use(bodyParser.json());
 
@@ -51,6 +48,10 @@ app.use(cookieParser());
 
 // Add some routing
 app.use('/api', routes);
+
+//A tiny, accurate, fast Express middleware for single page apps with client side routing.
+app.use(fallback('index.html', { root: path.join(__dirname, 'public')}))
+
 
 io.on('connect', async socket => {
 
