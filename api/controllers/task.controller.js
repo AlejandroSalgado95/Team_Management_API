@@ -241,17 +241,29 @@ module.exports.updateOneTask = async (req, res) => {
             return;
 
             //You wont be able to update a task unless you are an admin or you are trying to update a task assigned to you (wether you are an admin or user)
-          } else if (loggedUser.user_type != "admin" && !task.assignedToUser.equals(loggedUser._id) ){
+          } else if (loggedUser.user_type != "admin" ){
 
-            console.log(task.assignedToUser);
-            console.log(loggedUser._id);
+            var hasNoPermission = false;
 
-            res
-              .status(401)
-              .json({ 
-                "message" : 'Unauthorized user'
-              });
-            return; 
+            if (!task.assignedToUser){
+              hasNoPermission = true;
+            } else if (!task.assignedToUser.equals(loggedUser._id)){
+              hasNoPermission = true;
+            }
+
+            if (hasNoPermission){
+
+              console.log(task.assignedToUser);
+              console.log(loggedUser._id);
+
+              res
+                .status(401)
+                .json({ 
+                  "message" : 'Unauthorized user'
+                });
+              return; 
+
+            }
 
           }
 
@@ -287,36 +299,39 @@ module.exports.updateOneTask = async (req, res) => {
                   .json(err);
               } else {
 
+                    if (taskUpdated.assignedToUser){
 
-                var populatedTask = await TaskModel.findById(taskUpdated._id).populate('assignedToUser');              
+                        var populatedTask = await TaskModel.findById(taskUpdated._id).populate('assignedToUser');              
 
-                SessionModel
-                  .find({account: populatedTask.assignedToUser.account})
-                  .exec( (err, sessions) => {
-                    if (err) {
-                      console.log("Error finding sessions");
-                    } else {
-                      console.log("Found sessions", sessions.length);
-                      
-                      sessions.map(someSession => {
+                        SessionModel
+                          .find({account: populatedTask.assignedToUser.account})
+                          .exec( (err, sessions) => {
+                            if (err) {
+                              console.log("Error finding sessions");
+                            } else {
+                              console.log("Found sessions", sessions.length);
+                              
+                              sessions.map(someSession => {
 
-                        if (someSession.android_push_token){
-                           
-                              helpers.sendAndroidPushNotification (someSession.android_push_token, 
-                                  {title: "A task was updated!", body: taskUpdated.name}, {taskID: taskUpdated._id}, "updated_task");
-                        }
+                                if (someSession.android_push_token){
+                                   
+                                      helpers.sendAndroidPushNotification (someSession.android_push_token, 
+                                          {title: "A task was updated!", body: taskUpdated.name}, {taskID: taskUpdated._id}, "updated_task");
+                                }
 
-                      })
+                              })
 
+                            }
+                          });
+
+                      }
+
+                      res
+                        .status(200)
+                        .json(taskUpdated);
                     }
                   });
 
-
-                res
-                  .status(200)
-                  .json(taskUpdated);
-              }
-            });
 
 
         });
