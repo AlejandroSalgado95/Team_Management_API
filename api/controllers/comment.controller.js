@@ -28,7 +28,7 @@ module.exports.addOneComment = async (req, res) => {
         userID : loggedUser._id
       },
       content : req.body.content,
-      createdOn : req.body.createdOn
+      createdOn : Date.now()
     });
 
     task.save(function(err, taskUpdated) {
