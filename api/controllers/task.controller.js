@@ -286,7 +286,7 @@ module.exports.updateOneTask = async (req, res) => {
           } 
 
           //a user can only update a task's status, and only if such task is assigned to him
-          if (req.body.status) 
+          if (req.body.status != null) 
             task.status = req.body.status;
 
 
