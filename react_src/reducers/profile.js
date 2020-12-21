@@ -2,24 +2,31 @@
 const profileReducerDefaultState = { loading : false,
                                      account : undefined,
                                      id : undefined ,
+                                     name: undefined,
+                                     role: undefined,
+                                     user_type: undefined,
                                      error : undefined
                                     };
 
 export default (state = profileReducerDefaultState, action) => {
   switch (action.type) {
     case 'ADD_PROFILE':
-      const {account, id} = action.profile
+      const {account, id,name,role,user_type} = action.profile
       return {
         ...state,
         loading : false,
         error : undefined,
         account,
-        id
+        id,
+        name,
+        role,
+        user_type
       };
     case 'LOADING_PROFILE':
       return {
         ...state,
         loading : true,
+        error:undefined
       };
     case 'ERROR_ADD_PROFILE':
       return {
@@ -27,7 +34,10 @@ export default (state = profileReducerDefaultState, action) => {
         loading : false,
         error : action.error,
         account : undefined,
-        id : undefined
+        id : undefined,
+        name:undefined,
+        role:undefined,
+        user_type:undefined
       };
 
       /*

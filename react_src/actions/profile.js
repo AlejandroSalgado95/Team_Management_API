@@ -23,19 +23,22 @@ export const startAddProfile = (profileData = {}) => {
 
     dispatch(loadingProfile());
 
-    axiosConfig.post('/login', {
+    axiosConfig.post('/api/login', {
       account,
       password
     })
     .then(function (response) {
       console.log(response);
-      const {account , id } = response;
-      dispatch( addProfile({account,id}));
-
+      const {account , _id, name, role, user_type} = response.data.userinfo;
+      const id = _id
+      dispatch( addProfile({account,id,name,role,user_type}));
     })
     .catch(function (error) {
       console.log(error);
-      dispatch(errorAddProfile(error) );
+      let errorMessage
+      if (error == "Error: Request failed with status code 404")
+        errorMessage = "Wrong credentials"
+      dispatch(errorAddProfile(errorMessage) );
 
     });
       

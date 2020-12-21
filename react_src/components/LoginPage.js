@@ -11,9 +11,15 @@ export class LoginPage extends React.Component {
   };
 
   render() {
+    
+    if (this.props.profile.account != undefined)
+      this.props.history.push('/home');
+
     return (
       <div>
+        
         {this.props.profile.loading && <p>loading profile...</p>}
+        {this.props.profile.error && <p>{this.props.profile.error}</p>}
         <h1>Introduce credentials </h1>
         <LoginForm sendFormData={this.sendFormData}/>
       </div>
