@@ -2,6 +2,7 @@ require('dotenv').config();
 require('./api/db/dbmongoose.js');
 var fallback = require('express-history-api-fallback');
 var express = require('express');
+var cors = require('cors')
 var http = require('http');
 var app = express();
 var path = require('path');
@@ -19,6 +20,7 @@ var port = process.env.PORT || process.env.MY_PORT;
 var server = http.createServer(app);
 var io = socketio(server); 
 
+
 // Define the port to run on
 app.set('port', port);
 
@@ -26,6 +28,10 @@ app.set('port', port);
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1); 
 }
+
+//Allow cross domain requests
+app.use(cors())
+
 
 // Add middleware to console log every request
 app.use(function(req, res, next) {

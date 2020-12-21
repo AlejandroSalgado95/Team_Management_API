@@ -1,8 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, Route, Switch, Link, NavLink} from 'react-router-dom';
+import { Provider } from 'react-redux';
 import './styles/styles.scss';
 import AppRouter from './routers/AppRouter';
+import configureStore from './store/configureStore';
 
+const store = configureStore();
 
-ReactDOM.render(<AppRouter/>,document.getElementById("app"));
+const jsx = (
+  <Provider store={store}>
+    <AppRouter />
+  </Provider>
+);
+
+ReactDOM.render(jsx, document.getElementById('app'));
