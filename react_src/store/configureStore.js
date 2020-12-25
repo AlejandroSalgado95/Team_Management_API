@@ -1,5 +1,9 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import profileReducer from '../reducers/profile';
+import userReducer from '../reducers/user';
+import taskReducer from '../reducers/task';
+import userListReducer from '../reducers/userList';
+import taskListReducer from '../reducers/taskList';
+
 import thunk from 'redux-thunk';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -7,10 +11,11 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export default () => {
   const store = createStore(
     combineReducers({
-      /*userList: userListReducer,
-      taskList: taskListReducer,
+      userList: userListReducer,
+      taskList: taskListReducer,/*
       messageList: messageListReducer,*/
-      profile : profileReducer
+      actualUser : userReducer,
+      actualTask : taskReducer
     }),
     composeEnhancers(applyMiddleware(thunk))
   );

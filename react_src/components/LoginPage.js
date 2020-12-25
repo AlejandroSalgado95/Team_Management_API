@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { startAddProfile } from '../actions/profile';
+import { startAddUserByLogin } from '../actions/user';
 import LoginForm from "./LoginForm"
 
 export class LoginPage extends React.Component {
   
   sendFormData = (profile) => {
-    this.props.startAddProfile(profile);
+    this.props.startAddUserByLogin(profile);
     //this.props.history.push('/');
   };
 
@@ -18,8 +18,8 @@ export class LoginPage extends React.Component {
     return (
       <div>
         
-        {this.props.profile.loading && <p>loading profile...</p>}
-        {this.props.profile.error && <p>{this.props.profile.error}</p>}
+        {this.props.profile.loadingUser && <p>loading...</p>}
+        {this.props.profile.errorUser && <p>{this.props.profile.errorUser}</p>}
         <h1>Introduce credentials </h1>
         <LoginForm sendFormData={this.sendFormData}/>
       </div>
@@ -30,12 +30,12 @@ export class LoginPage extends React.Component {
 
 const mapStateToProps = (state, props) => ({
   //expense: state.expenses.find((expense) => expense.id === props.match.params.id)
-  profile: state.profile
+  profile: state.actualUser
 });
 
 
 const mapDispatchToProps = (dispatch) => ({
-  startAddProfile: (profile) => dispatch(startAddProfile(profile))
+  startAddUserByLogin: (profile) => dispatch(startAddUserByLogin(profile))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

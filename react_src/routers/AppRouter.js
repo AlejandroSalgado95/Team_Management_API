@@ -19,10 +19,10 @@ const AppRouter = () => (
 				<Route path = "/" component = {LoginPage} exact = {true}/>	
 				<Route path = "/home" component = {HomePage} />
 				<Route path = "/chat" component = {ChatPage} />
-				/*<Route path = "/userlist" component = {UserListPage} />
-				<Route path = "/tasklist" component = {TaskListPage} />
-				<Route path = "/user/:id" component = {UserPage} />
-				<Route path = "/task/:id" component = {TaskPage} />*/
+				<Route path = "/users/:id" component = {UserPage} />
+				<Route path = "/users" component = {UserListPage} exact = {true}/>
+				<Route path = "/tasks" component = {TaskListPage} exact = {true} />
+				<Route path = "/tasks/:id" component = {TaskPage} />
 				<Route component = {NotFoundPage}/>	
 			</Switch>
 		</div>
