@@ -27,7 +27,7 @@ class TaskListPage extends React.Component {
 			    <button onClick = {this.goBack}>Back</button>
 			    {this.props.taskList.error && <p>{this.props.taskList.error}</p>}
         		{this.props.taskList.loadingTaskList && <p>loading task list...</p> }
-			    <TaskList tasks = {this.props.taskList.tasks} loading = {this.props.taskList.loadingTaskList}/>
+			    {!this.props.taskList.loadingTaskList && <TaskList tasks = {this.props.taskList.tasks} loading = {this.props.taskList.loadingTaskList}/>}
 			  </div>
 		);
 	}

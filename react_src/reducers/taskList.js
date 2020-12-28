@@ -15,8 +15,8 @@ export default (state = TaskListReducerDefaultState, action) => {
       };
     case 'LOADING_TASKLIST':
       return {
+        ...state,
         loadingTaskList: true,
-        tasks: [],
         error: undefined
       };
     case 'ERROR_ADD_TASKLIST':

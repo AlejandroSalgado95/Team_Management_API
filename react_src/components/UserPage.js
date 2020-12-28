@@ -13,6 +13,10 @@ export class UserPage extends React.Component {
 		this.props.history.goBack();
 	  }
 
+	  goToEditPage = () => {
+	  	this.props.history.push(`/users/${this.props.match.params.id}/edit`)
+	  }
+
 	 refreshData(){
      	const user = {id: this.props.match.params.id};
      	console.log(user.id);
@@ -39,16 +43,19 @@ export class UserPage extends React.Component {
 
 	render(){
 
-		const profileId = sessionStorage.getItem('profileId');
-		let showGoBack = true;
 
-		if (profileId === this.props.match.params.id)
-			showGoBack = false
+	    const user_type = sessionStorage.getItem('userType');
+		const profileId = sessionStorage.getItem('profileId');
+
+    	let showEdit = ((user_type === "admin") || (profileId === this.props.match.params.id))? true : false;
+		let showGoBack = (profileId === this.props.match.params.id)? false : true;
+
 
 		return (
 			<div>
 				<Header/>
 				{showGoBack && <button onClick = {this.goBack}>Back</button>}
+				{showEdit && <button onClick = {this.goToEditPage}>Edit</button>}
 				{this.props.user.errorUser && <p>{this.props.user.errorUser}</p>}
 				{this.props.user.errorTasks && <p>{this.props.user.errorTasks}</p>}
 				{this.props.user.loadingUser && <p>loading user...</p>}

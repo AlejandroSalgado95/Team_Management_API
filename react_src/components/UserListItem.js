@@ -1,20 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter} from 'react-router-dom';
 
 
 const UserListItem = (props) =>  (
 		  
-	<Link to={`/users/${props.id}`}>
-	    <div>
+	    <div onClick = {()=>{props.history.push(`/users/${props.id}`)}} >
 	    	<h3>{props.account}</h3>
 		    <p>Name: {props.name}</p>
 		    <p>User type: {props.user_type}</p>
 		</div>
-	 </Link>
-
 )
 	
 
 
 
-export default UserListItem
+export default withRouter(UserListItem);

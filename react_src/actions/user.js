@@ -30,8 +30,7 @@ export const startAddUserByLogin = (userData = {}) => {
     })
     .then(function (response) {
       console.log(response);
-      const {account , _id, name, role, user_type} = response.data.userinfo;
-      const id = _id
+      const {account , _id : id, name, role, user_type} = response.data.userinfo;
       sessionStorage.setItem('profileId', id);
       sessionStorage.setItem('profileAccount', account);
       sessionStorage.setItem('userType',user_type);

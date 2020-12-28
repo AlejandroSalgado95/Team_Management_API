@@ -20,10 +20,14 @@ class TaskPage extends React.Component {
 	  	const task = {id: this.props.match.params.id};
      	console.log(task.id);
      	this.props.startAddTask(task);
+
+
       }
 
 
 	render(){
+	    
+
 		return (
 			<div>
 				<Header />
