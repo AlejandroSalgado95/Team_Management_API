@@ -15,6 +15,11 @@ export class LoginPage extends React.Component {
     this.props.resetModal();
   }
 
+  componentDidMount(){
+    this.props.resetModal();
+
+  }
+
 
   render() {
     

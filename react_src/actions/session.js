@@ -77,11 +77,12 @@ export const startAddSessionByLogin = (userData = {}) => {
     .catch(function (error) {
       console.log(error);
       let errorMessage
-      if (error == "Error: Request failed with status code 404")
+      if (error == "Error: Request failed with status code 401")
         errorMessage = "Wrong credentials"
       else 
-        errorMessage ="Something went wrong while loggin in"
+        errorMessage ="Something went wrong while logging in"
       dispatch(deleteSession());
+      dispatch(notLoadingSession());
       dispatch(setModal(errorMessage) );
 
     });
@@ -89,4 +90,24 @@ export const startAddSessionByLogin = (userData = {}) => {
 
   };
 };
+
+
+export const startDeleteSession = () => {
+  return (dispatch) => {
+
+    axiosConfig.post(`api/logout`,{})
+    .then(function (response) {
+      console.log(response);
+      dispatch( deleteSession());
+      dispatch(notLoadingSession())
+    })
+    .catch(function (error) {
+      console.log(error);
+      let errorMessage;
+      errorMessage ="Something went wrong while logging out"
+      dispatch(setModal(errorMessage) );
+
+    });
+  }
+}
 
