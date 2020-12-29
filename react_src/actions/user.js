@@ -14,40 +14,6 @@ export const loadingUser = () => ({
   type: 'LOADING_USER'
 });
 
-export const startAddUserByLogin = (userData = {}) => {
-  return (dispatch) => {
-    const {
-      account = '',
-      password = '',
-      id = ''
-    } = userData;
-
-    dispatch(loadingUser());
-
-    axiosConfig.post('/api/login', {
-      account,
-      password
-    })
-    .then(function (response) {
-      console.log(response);
-      const {account , _id : id, name, role, user_type} = response.data.userinfo;
-      sessionStorage.setItem('profileId', id);
-      sessionStorage.setItem('profileAccount', account);
-      sessionStorage.setItem('userType',user_type);
-      dispatch( addUser({account,id,name,role,user_type}));
-    })
-    .catch(function (error) {
-      console.log(error);
-      let errorMessage
-      if (error == "Error: Request failed with status code 404")
-        errorMessage = "Wrong credentials"
-      dispatch(errorAddUser(errorMessage) );
-
-    });
-      
-
-  };
-};
 
 export const startAddUserById = (userData = {}) => {
   return (dispatch) => {

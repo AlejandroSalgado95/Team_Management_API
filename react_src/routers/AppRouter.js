@@ -10,6 +10,7 @@ import AddUserPage from '../components/AddUserPage';
 import EditUserPage from '../components/EditUserPage';
 import TaskPage from '../components/TaskPage';
 import NotFoundPage from '../components/NotFoundPage';
+import SplashScreenPage from '../components/SplashScreenPage'
 
 
 
@@ -18,7 +19,8 @@ const AppRouter = () => (
 	<BrowserRouter>
 		<div>
 			<Switch>
-				<Route path = "/" component = {LoginPage} exact = {true}/>	
+				<Route path = "/" component = {SplashScreenPage} exact = {true}/>
+				<Route path = "/login" component = {LoginPage}/>
 				<Route path = "/home" component = {HomePage} />
 				<Route path = "/chat" component = {ChatPage} />
 				<Route path = "/users" component = {UserListPage} exact = {true}/>

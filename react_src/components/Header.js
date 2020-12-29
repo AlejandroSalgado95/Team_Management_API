@@ -1,25 +1,13 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
-
-//import uuid from 'react-uuid'
-
-/*
-const Header = () => (
-	<header>
-		<h1>STM</h1>
-		<button>Logout</button>
-		<NavLink to ="/" activeClassName="is-active" exact = {true}> Home</NavLink>
-		<NavLink to ="/chat" activeClassName="is-active"> Chat</NavLink>
-		
-	</header>
-)*/
+import { connect } from 'react-redux';
 
 
-export class Header extends React.Component  {
+class Header extends React.Component  {
 
 		render(){
-			const profileId = sessionStorage.getItem('profileId');
-			const profileAccount = sessionStorage.getItem('profileAccount');
+			const profileId = this.props.session.profile._id ;
+			const profileAccount = this.props.session.profile.account;
 			
 			return (
 				<header>
@@ -34,6 +22,9 @@ export class Header extends React.Component  {
 		
 	}
 
+const mapStateToProps = (state, props) => ({
+  session: state.session
+});
 
 
-export default Header;
+export default connect(mapStateToProps, null)(Header);

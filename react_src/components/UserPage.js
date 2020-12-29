@@ -44,8 +44,8 @@ export class UserPage extends React.Component {
 	render(){
 
 
-	    const user_type = sessionStorage.getItem('userType');
-		const profileId = sessionStorage.getItem('profileId');
+	    const user_type = this.props.session.profile.user_type;
+		const profileId = this.props.session.profile._id;
 
     	let showEdit = ((user_type === "admin") || (profileId === this.props.match.params.id))? true : false;
 		let showGoBack = (profileId === this.props.match.params.id)? false : true;
@@ -77,7 +77,8 @@ export class UserPage extends React.Component {
 
 const mapStateToProps = (state, props) => ({
   //expense: state.expenses.find((expense) => expense.id === props.match.params.id)
-  user: state.actualUser
+  user: state.actualUser,
+  session: state.session
 });
 
 

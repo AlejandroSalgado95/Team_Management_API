@@ -3,6 +3,7 @@ import userReducer from '../reducers/user';
 import taskReducer from '../reducers/task';
 import userListReducer from '../reducers/userList';
 import taskListReducer from '../reducers/taskList';
+import sessionReducer from '../reducers/session';
 
 import thunk from 'redux-thunk';
 
@@ -15,7 +16,8 @@ export default () => {
       taskList: taskListReducer,/*
       messageList: messageListReducer,*/
       actualUser : userReducer,
-      actualTask : taskReducer
+      actualTask : taskReducer, 
+      session : sessionReducer
     }),
     composeEnhancers(applyMiddleware(thunk))
   );

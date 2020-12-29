@@ -1,6 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-export default  class UserForm extends React.Component {
+class UserForm extends React.Component {
   /*
   state = {
       account:undefined,
@@ -116,9 +117,8 @@ export default  class UserForm extends React.Component {
 
   render() {
 
-    const user_type = sessionStorage.getItem('userType');
-    const profileId = sessionStorage.getItem('profileId');
-
+    const user_type = this.props.session.profile.user_type;
+    const profileId = this.props.session.profile._id;
     let showRole;
     let showName;
     let showPassword;
@@ -215,3 +215,13 @@ export default  class UserForm extends React.Component {
   }
 
 }
+
+
+const mapStateToProps = (state, props) => ({
+  //expense: state.expenses.find((expense) => expense.id === props.match.params.id)
+  session: state.session
+});
+
+export default connect(mapStateToProps, null)(UserForm);
+
+

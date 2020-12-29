@@ -26,7 +26,7 @@ export class UserListPage extends React.Component {
 
   render(){
 
-    const user_type = sessionStorage.getItem('userType');
+    const user_type = this.props.session.profile.user_type;
     const showAddUser = (user_type === "admin")? true : false;
 
 
@@ -48,11 +48,11 @@ export class UserListPage extends React.Component {
 }
 
 
-const mapStateToProps = (state) => {
-  return {
-    userList: state.userList
-  };
-};
+const mapStateToProps = (state, props) => ({
+  //expense: state.expenses.find((expense) => expense.id === props.match.params.id)
+  session: state.session,
+  userList: state.userList
+});
 
 
 const mapDispatchToProps = (dispatch) => ({
