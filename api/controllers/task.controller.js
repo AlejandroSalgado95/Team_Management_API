@@ -20,8 +20,8 @@ module.exports.getAllTasks = async (req, res) => {
     await TaskModel
       .find({})
       .select('-taskComments')
-      .populate("createdByUser")
-      .populate("assignedToUser")
+      .populate("createdByUser", "-password -android_push_token")
+      .populate("assignedToUser", "-password -android_push_token")
       .exec( (err, tasks) => {
         if (err) {
           console.log("Error finding tasks");
@@ -57,8 +57,8 @@ module.exports.getTasksFromUser = async (req, res) => {
     await TaskModel
       .find({assignedToUser: userId})
       .select('-taskComments')
-      .populate("createdByUser")
-      .populate("assignedToUser")
+      .populate("createdByUser", "-password -android_push_token")
+      .populate("assignedToUser", "-password -android_push_token")
       .exec( (err, tasks) => {
         if (err) {
           console.log("Error finding tasks");
@@ -119,29 +119,32 @@ module.exports.addOneTask = async (req, res) => {
               console.log("Task created!", task);
               
 
-              var populatedTask = await TaskModel.findById(task._id).populate('assignedToUser');              
+              if (!loggedUser._id.equals(task.assignedToUser)){
 
-              SessionModel
-                .find({account: populatedTask.assignedToUser.account})
-                .exec( (err, sessions) => {
-                  if (err) {
-                    console.log("Error finding sessions");
-                  } else {
-                    console.log("Found sessions", sessions.length);
-                    
-                    sessions.map(someSession => {
+                var populatedTask = await TaskModel.findById(task._id).populate('assignedToUser');              
 
-                      if (someSession.android_push_token){
-                         
-                            helpers.sendAndroidPushNotification (someSession.android_push_token, 
-                                {title: "New task assigned!", body: task.name}, {taskID: task._id}, "new_task");
-                      }
+                SessionModel
+                  .find({account: populatedTask.assignedToUser.account})
+                  .exec( (err, sessions) => {
+                    if (err) {
+                      console.log("Error finding sessions");
+                    } else {
+                      console.log("Found sessions", sessions.length);
+                      
+                      sessions.map(someSession => {
+
+                        if (someSession.android_push_token){
+                           
+                              helpers.sendAndroidPushNotification (someSession.android_push_token, 
+                                  {title: "New task assigned!", body: task.name}, {taskID: task._id}, "new_task");
+                        }
 
 
-                    })
+                      })
 
-                  }
-                });
+                    }
+                  });
+              }
 
 
               res
@@ -179,8 +182,8 @@ module.exports.getOneTask = async (req, res) => {
 
     await TaskModel
       .findById(id)
-      .populate("createdByUser")
-      .populate("assignedToUser")
+      .populate("createdByUser", "-password -android_push_token")
+      .populate("assignedToUser", "-password -android_push_token")
       .exec(function(err, doc) {
         var response = {
           status : 200,
@@ -301,34 +304,41 @@ module.exports.updateOneTask = async (req, res) => {
 
                     if (taskUpdated.assignedToUser){
 
-                        var populatedTask = await TaskModel.findById(taskUpdated._id).populate('assignedToUser');              
+                      if (!loggedUser._id.equals(taskUpdated.assignedToUser)){
 
-                        SessionModel
-                          .find({account: populatedTask.assignedToUser.account})
-                          .exec( (err, sessions) => {
-                            if (err) {
-                              console.log("Error finding sessions");
-                            } else {
-                              console.log("Found sessions", sessions.length);
-                              
-                              sessions.map(someSession => {
+                          var populatedTask = await TaskModel.findById(taskUpdated._id).populate('assignedToUser', "-password -android_push_token");              
 
-                                if (someSession.android_push_token){
-                                   
-                                      helpers.sendAndroidPushNotification (someSession.android_push_token, 
-                                          {title: "A task was updated!", body: taskUpdated.name}, {taskID: taskUpdated._id}, "updated_task");
-                                }
+                          SessionModel
+                            .find({account: populatedTask.assignedToUser.account})
+                            .exec( (err, sessions) => {
+                              if (err) {
+                                console.log("Error finding sessions");
+                              } else {
+                                console.log("Found sessions", sessions.length);
+                                
+                                sessions.map(someSession => {
 
-                              })
+                                  if (someSession.android_push_token){
+                                     
+                                        helpers.sendAndroidPushNotification (someSession.android_push_token, 
+                                            {title: "A task was updated!", body: taskUpdated.name}, {taskID: taskUpdated._id}, "updated_task");
+                                  }
 
-                            }
-                          });
+                                })
 
+                              }
+                            });
                       }
+
+                    }
+
+                      var populatedTask = await TaskModel.findById(taskUpdated._id)
+                                                         .populate("createdByUser", "-password -android_push_token")
+                                                         .populate('assignedToUser', "-password -android_push_token");
 
                       res
                         .status(200)
-                        .json(taskUpdated);
+                        .json(populatedTask);
                     }
                   });
 

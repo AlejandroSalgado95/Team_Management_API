@@ -17,8 +17,13 @@ const TaskCommentList = (props) => {
 
   return (
     <div>
-      {showNoTaskCommentsFound && <p>No comments</p>}
-      { showTaskComments && props.taskComments.map((taskComment) => {return <TaskCommentListItem key={taskComment._id} id = {taskComment._id} content = {taskComment.content} createdOn ={taskComment.createdOn} postedBy ={taskComment.postedBy}/>})}
+      {showNoTaskCommentsFound && <p className="m-font-size center" style={{color:"#3fa5b5"}}>No comments</p>}
+      { showTaskComments && <div style={{ margin:"100px",height:"500px",overflow:" scroll"}}>
+        <ul class="collection">
+          {props.taskComments.map((taskComment) => {return <TaskCommentListItem key={taskComment._id} id = {taskComment._id} content = {taskComment.content} createdOn ={taskComment.createdOn} postedBy ={taskComment.postedBy}/>})}
+        </ul>
+      </div>
+      }
     </div>
   );
 }

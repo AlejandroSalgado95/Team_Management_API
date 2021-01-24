@@ -19,9 +19,9 @@ export class SplashScreenPage extends React.Component {
 			this.props.history.push("/login");
 
 		return (
-			<div>
-				<p>This is the splash screen</p>	
-				<img src="img/favicon.png" width="500" height="600"></img>
+			<div className="center" style={{marginTop:"100px",marginBottom:"0px"}}>
+				<img src={`${window.location.origin}/img/logo.png`} width="250" height="250"></img>
+				<h2>STM</h2>
 			</div>
 		)
 

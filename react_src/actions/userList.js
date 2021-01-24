@@ -1,5 +1,5 @@
 import axiosConfig from '../api_calls/axiosConfig';
-
+import {editSessionProfile} from './session'
 
 export const resetModal = () => ({
   type: 'RESET_MODAL'
@@ -10,25 +10,27 @@ export const setModal = (modalMessage) => ({
   modalMessage
 });
 
-
-
-//READ
-
-export const addUserList = (userList) => ({
-  type: 'ADD_USERLIST',
-  userList
-});
-
-export const errorOccured = (error) => ({
-  type: 'ERROR_OCURRED',
-  error
-});
-
 export const loadingUserList = () => ({
   type: 'LOADING_USERLIST'
 });
 
-export const startAddUserList = () => {
+
+//READ
+
+export const addUserList = ({userList,profileId}) => ({
+  type: 'ADD_USERLIST',
+  userList,
+  profileId
+});
+
+/*
+export const errorOccured = (error) => ({
+  type: 'ERROR_OCURRED',
+  error
+});
+*/
+
+export const startAddUserList = (profileId) => {
   return (dispatch) => {
 
     dispatch(loadingUserList());
@@ -36,7 +38,7 @@ export const startAddUserList = () => {
     axiosConfig.get('/api/users')
     .then(function (response) {
       console.log(response);
-      dispatch( addUserList(response.data));
+      dispatch( addUserList({userList:response.data,profileId}));
     })
     .catch(function (error) {
       console.log(error);
@@ -109,7 +111,10 @@ export const startEditUserFromUserList = (user) => {
     .then(function (response) {
       console.log(response);
       let successMessage = "Updated user successfully"
-      dispatch( editUserFromUserList(response.data));
+      if (user.isProfile)
+        dispatch( editSessionProfile(response.data));
+      else
+        dispatch( editUserFromUserList(response.data));
       dispatch(setModal(successMessage));
 
     })
@@ -128,4 +133,39 @@ export const startEditUserFromUserList = (user) => {
   };
 };
 
+
+
+//DELETE
+export const removeUserFromUserList = (id) => ({
+  type: 'REMOVE_USER_FROM_USERLIST',
+  id
+});
+
+export const startRemoveUserFromUserList = (id) => {
+  return (dispatch) => {
+
+    dispatch(loadingUserList());
+
+    axiosConfig.delete(`/api/users/${id}`,{})
+    .then(function (response) {
+      console.log(response);
+      let successMessage = "Deleted user successfully";
+      dispatch( removeUserFromUserList(id));
+      dispatch(setModal(successMessage));
+
+    })
+    .catch(function (error) {
+      console.log(error);
+      let errorMessage;
+      if (error == "Error: Request failed with status code 403")
+        errorMessage = "Unauthorized content. No session id provided."
+      else
+        errorMessage = "something went wrong while deleting the user"
+      dispatch(setModal(errorMessage) );
+
+    });
+      
+
+  };
+};
 

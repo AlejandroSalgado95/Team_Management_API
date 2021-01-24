@@ -12,12 +12,16 @@ class TaskListItem extends React.Component{
 
 	render(){
 		return (
-		    <div onClick = {()=>{this.goToTask(this.props.id)}}>
-		        <h3>{this.props.name}</h3>
-		        <p>Assigned to: {this.props.assignedToUser.name}</p>
-		        <p>Creation date: {this.formatCreationDate(this.props.creationDate)}</p>
-		        <p>Status: {this.props.status? "done" : "pending"}</p>
-		    </div>
+
+			  <li className="collection-item avatar" onClick = {()=>{this.goToTask(this.props.id)}}>
+			      <i className="material-icons circle black large">assignment</i>
+			      <p className="title m-font-size">{this.props.name}</p>
+			      {this.props.assignedToUser?(<p className="s-font-size">Assigned to: {this.props.assignedToUser.name} </p>) : (<p className="s-font-size">Assigned to: Deleted user</p>)}
+			      <p className="s-font-size">Creation date: {this.formatCreationDate(this.props.creationDate)}</p>
+				  <p className="s-font-size">Status: {this.props.status? "done" : "pending"}</p>
+			      <a className="secondary-content"><i class="material-icons medium">arrow_forward</i></a>
+			  </li>
+
 
 		)
 	}

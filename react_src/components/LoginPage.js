@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { startAddSessionByLogin , resetModal} from '../actions/session';
+import { startAddSessionByLogin , resetModal, notLoadingSession} from '../actions/session';
 import LoginForm from "./LoginForm"
 import Modal from 'react-modal';
 
-export class LoginPage extends React.Component {
+class LoginPage extends React.Component {
   
   sendFormData = (profile) => {
     this.props.startAddSessionByLogin(profile);
@@ -17,6 +17,7 @@ export class LoginPage extends React.Component {
 
   componentDidMount(){
     this.props.resetModal();
+    this.props.notLoadingSession();
 
   }
 
@@ -28,8 +29,9 @@ export class LoginPage extends React.Component {
 
     return (
       <div>
-        {this.props.session.loadingSession && <p>loading...</p>}
-        <h1>Introduce credentials </h1>
+        <div className="center">
+        <img src={`${window.location.origin}/img/logo.png`} style={{marginTop:"15px"}} width="60" height="60"></img>
+        <p className="s-font-size" style={{color:"#112e47",margin:"0px"}}>Introduce credentials </p></div>
         <LoginForm sendFormData={this.sendFormData}/>
         <Modal
             isOpen={this.props.session.modal}
@@ -55,6 +57,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   startAddSessionByLogin: (profile) => dispatch(startAddSessionByLogin(profile)),
+  notLoadingSession: ()=>dispatch(notLoadingSession()),
   resetModal: () => dispatch(resetModal())
 
 });

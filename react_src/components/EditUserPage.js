@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
 import { startEditUserFromUserList, resetModal } from '../actions/userList';
 import EditUserForm from './UserForm'
-import Modal from 'react-modal';
+import AcceptModal from './CustomModal';
+import Footer from './Footer'
 
  class EditUserPage extends React.Component {
 
@@ -15,7 +16,8 @@ import Modal from 'react-modal';
 	  }
 
 	  sendFormData = (user) => {
-	    this.props.startEditUserFromUserList(user);
+	  	const isProfile = (user._id == this.props.session.profile._id)?true:false;
+	    this.props.startEditUserFromUserList({...user,isProfile});
 	  };
 
 
@@ -38,22 +40,22 @@ import Modal from 'react-modal';
 
 	render(){
      	const userId = this.props.match.params.id;
-		const userToEdit = this.props.userList.users.filter((user)=>user._id == userId)[0];
+		let userToEdit = this.props.userList.users.filter((user)=>user._id == userId)[0];
 		console.log(userToEdit);
+		if (!userToEdit){
+			userToEdit = this.props.session.profile;
+		}
+
+
 		return (
 			<div>
 				<Header/>
-				<button onClick = {this.goBack}>Back</button>
-				<p>This is the edit page for user {this.props.match.params.id}</p>
+        		<a onClick = {this.goBack} className="btn-large brand-color left" style={{margin:"10px",  display: "block"}} ><i className="material-icons left">arrow_back</i>Back</a>
 				<EditUserForm isEditForm = {true} sendFormData = {this.sendFormData} {...userToEdit}></EditUserForm>
-				<Modal
-		            isOpen={this.props.userList.modal}
-		            onRequestClose={this.closeModal}
-		          >
-		          {this.props.userList.modal}
-		          <button onClick={this.closeModal}>close</button>
-
-		        </Modal>
+				<Footer/>
+				<AcceptModal openModal = {this.props.userList.modal} closeModal = {this.closeModal}>
+					<a onClick = {this.closeModal} className="btn-large brand-color right" style={{margin:"10px",  display: "block"}} >Accept</a>
+				</AcceptModal>
 
 			</div>
 		)
@@ -65,7 +67,8 @@ import Modal from 'react-modal';
 
 const mapStateToProps = (state, props) => ({
   //expense: state.expenses.find((expense) => expense.id === props.match.params.id)
-  userList: state.userList
+  userList: state.userList,
+  session: state.session
 });
 
 

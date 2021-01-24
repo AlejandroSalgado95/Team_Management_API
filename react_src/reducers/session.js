@@ -15,6 +15,14 @@ export default (state = sessionDefaultState, action) => {
         profile: action.profile,
         modal:undefined
       };
+    case 'EDIT_SESSION_PROFILE':
+      return{
+        ...state,
+        profile:{
+          ...state.profile,
+          ...action.profile
+        }
+      } 
     case 'NOT_LOADING_SESSION':
       return {
         ...state,

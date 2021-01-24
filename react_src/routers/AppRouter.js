@@ -4,11 +4,13 @@ import LoginPage from '../components/LoginPage';
 import HomePage from '../components/HomePage';
 import ChatPage from '../components/ChatPage';
 import TaskListPage from '../components/TaskListPage';
+import TaskPage from '../components/TaskPage';
+import AddTaskPage from '../components/AddTaskPage';
+import EditTaskPage from '../components/EditTaskPage';
 import UserListPage from '../components/UserListPage';
 import UserPage from '../components/UserPage';
 import AddUserPage from '../components/AddUserPage';
 import EditUserPage from '../components/EditUserPage';
-import TaskPage from '../components/TaskPage';
 import NotFoundPage from '../components/NotFoundPage';
 import SplashScreenPage from '../components/SplashScreenPage'
 
@@ -28,7 +30,9 @@ const AppRouter = () => (
 				<Route path = "/users/:id" component = {UserPage} exact = {true} />
 				<Route path = "/users/:id/edit" component = {EditUserPage} />
 				<Route path = "/tasks" component = {TaskListPage} exact = {true} />
-				<Route path = "/tasks/:id" component = {TaskPage} />
+				<Route path = "/tasks/add" component = {AddTaskPage}  />
+				<Route path = "/tasks/:id" component = {TaskPage} exact = {true}/>
+				<Route path = "/tasks/:id/edit" component = {EditTaskPage} />
 				<Route component = {NotFoundPage}/>	
 			</Switch>
 		</div>

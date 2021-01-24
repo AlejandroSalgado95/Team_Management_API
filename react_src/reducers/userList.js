@@ -13,8 +13,8 @@ export default (state = UserListReducerDefaultState, action) => {
       return {
         ...state,
         loadingUserList: false,
-       // users: action.userList.filter((user)=>user._id!=profileId),
-        users:action.userList.filter(()=>true),
+        users: action.userList.filter((user)=>user._id!=action.profileId),
+        //users:action.userList.filter(()=>true),
         //error:undefined
       };
     case 'ADD_USER_TO_USERLIST':
@@ -40,6 +40,13 @@ export default (state = UserListReducerDefaultState, action) => {
         }
       })
     };
+    case 'REMOVE_USER_FROM_USERLIST':
+      return {
+          ...state,
+          loadingUserList: false,
+          users:  state.users.filter(({ _id }) => _id !== action.id)
+      };
+
     case 'LOADING_USERLIST':
       return {
         ...state,

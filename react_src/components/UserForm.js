@@ -115,6 +115,13 @@ class UserForm extends React.Component {
     }
   };
 
+  componentDidUpdate(){
+
+      let elems = document.querySelectorAll('select');
+      M.FormSelect.init(elems, {});
+
+  }
+
   render() {
 
     const user_type = this.props.session.profile.user_type;
@@ -167,48 +174,54 @@ class UserForm extends React.Component {
     }
 
     return (
-      <div>
-        {this.state.error && <p>{this.state.error}</p>}
+      <div className="center" style={{marginTop:"80px", marginBottom:"70px"}} >
+        {this.state.error && <p className="s-font-size">{this.state.error}</p>}
         <form onSubmit={this.onSubmit}>
           {showAccount && <input
             type="text"
             placeholder="Account"
-            autoFocus
             value={this.state.account}
             onChange={this.onAccountChange}
+            style={{width:"70%"}}
           />}
           {showName && <input
             type="text"
             placeholder="Name"
             value={this.state.name}
             onChange={this.onNameChange}
+            style={{width:"70%"}}
           />}
           {showRole && <input
             type="text"
             placeholder="role"
             value={this.state.role}
             onChange={this.onRoleChange}
+            style={{width:"70%"}}
           />}
           {showPassword && <input
-            type="text"
+            type="password"
             placeholder="Password"
             value={this.state.password}
             onChange={this.onPasswordChange}
+            style={{width:"70%"}}
           />}
           {showConfirmPassword && <input
-            type="text"
+            type="password"
             placeholder="Confirm Password"
             value={this.state.confirmPassword}
             onChange={this.onConfirmPasswordChange}
+            style={{width:"70%"}}
           />}
-          {showUserType &&
-          <input
-            type="text"
-            placeholder="User type"
-            value={this.state.user_type}
-            onChange={this.onUserTypeChange}
-          />}
-          <button>{this.props.isAddForm?"Create user":"Update user"}</button>
+          {showUserType && <center><div className="input-field" style={{width:"70%"}} ><select onChange={this.onUserTypeChange}>
+              <option value = ""  disabled selected>None</option>
+              {(this.state.user_type == "user")?(<option value = "user"  selected>user</option>):(<option value = "user" >user</option>)}
+              {(this.state.user_type == "admin")?(<option value = "admin"  selected>admin</option>):(<option value = "admin" >admin</option>)}
+
+            </select><label>User type</label></div></center>
+          }
+
+          <div className="center" style={{marginTop:"40px"}}><a onClick={this.onSubmit}className="btn btn-large brand-color" style={{backgroundColor: "#112e47", color:"white"}}>{this.props.isAddForm?"Create user":"Update user"}</a></div>
+
         </form>
       </div>
     );

@@ -3,7 +3,10 @@ import Header from './Header';
 import { connect } from 'react-redux';
 import { startAddUserToUserList, resetModal } from '../actions/userList';
 import AddUserForm from "./UserForm"
-import Modal from 'react-modal';
+import AcceptModal from './CustomModal';
+import Footer from './Footer';
+
+
 
 class AddUserPage extends React.Component {
   
@@ -37,16 +40,12 @@ class AddUserPage extends React.Component {
     return (
       <div>
         <Header/>
-        <button onClick = {this.goBack}>Back</button>
+        <a onClick = {this.goBack} className="btn-large brand-color left" style={{margin:"10px",  display: "block"}} ><i className="material-icons left">arrow_back</i>Back</a>
         <AddUserForm isAddForm = {true} sendFormData={this.sendFormData}/>
-        <Modal
-            isOpen={this.props.userList.modal}
-            onRequestClose={this.closeModal}
-          >
-          {this.props.userList.modal}
-          <button onClick={this.closeModal}>close</button>
-
-        </Modal>
+        <Footer/>
+        <AcceptModal openModal={this.props.userList.modal} closeModal={this.closeModal} >
+          <a onClick = {this.closeModal} className="btn-large brand-color right" style={{margin:"10px",  display: "block"}} >Accept</a>
+        </AcceptModal>
       </div>
 
     );

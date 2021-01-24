@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { startAddUserList} from '../actions/userList';
 import UserList from './UserList'
+import Footer from './Footer'
 
 export class UserListPage extends React.Component {
 
@@ -14,13 +15,13 @@ export class UserListPage extends React.Component {
   }
 
 
-  addUser = () => {
+  goToAddUser = () => {
     console.log(this.props.history);
     this.props.history.push("/users/add");
   }
 
   componentDidMount() {
-    this.props.startAddUserList();
+    this.props.startAddUserList(this.props.session.profile._id);
   }
 
 
@@ -33,11 +34,12 @@ export class UserListPage extends React.Component {
     return (
       <div>
         <Header/>
-        <button onClick = {this.goBack}>Back</button>
-        {showAddUser && <Link to = "/users/add"><button>Add user</button></Link>}
+        <a onClick = {this.goBack} className="btn-large brand-color left" style={{margin:"10px"}} ><i className="material-icons left">arrow_back</i>Back</a>
+        {showAddUser? (<a onClick={this.goToAddUser} className="btn-large brand-color right" style={{margin:"10px"}}><i className="material-icons left">add</i>Add user</a>):(<a className="btn-large brand-color right" style={{margin:"10px"}} disabled><i className="material-icons left">add</i>Add user</a>)}
         {this.props.userList.error && <p>{this.props.userList.error}</p>}
-        {this.props.userList.loadingUserList && <p>loading user list...</p> }
-        {!this.props.userList.loadingUserList && <UserList users = {this.props.userList.users} loading = {this.props.userList.loadingUserList} />}
+        {this.props.userList.loadingUserList && <div className="m-font-size center" style={{marginTop:"100px"}}><p>loading user list...</p></div> }
+        {!this.props.userList.loadingUserList && <UserList users = {this.props.userList.users} loading = {this.props.userList.loadingUserList}/>}
+        <Footer/>
       </div>
     )
 
@@ -56,7 +58,7 @@ const mapStateToProps = (state, props) => ({
 
 
 const mapDispatchToProps = (dispatch) => ({
-  startAddUserList: () => dispatch(startAddUserList())
+  startAddUserList: (profileId) => dispatch(startAddUserList(profileId))
 });
 
 

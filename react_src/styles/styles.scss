@@ -1,2 +1,8 @@
-
-@import './base/base'
+@import './base/settings';
+@import './base/base';
+@import './components/messagelist';
+@import './components/header';
+@import './components/home';
+@import './components/userlist';
+@import './components/modal';
+@import './components/footer'

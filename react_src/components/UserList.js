@@ -14,9 +14,13 @@ const UserList = (props) => {
     showUsers = true;
 
   return(
-      <div>
-        {showNoUsersFound && <p>No users found</p>}
-        { showUsers && props.users.map((user) => {return <UserListItem key={user._id} id = {user._id} account = {user.account} name = {user.name} user_type ={user.user_type} />;})}
+      <div >
+        {showNoUsersFound && <p className="m-font-size center">No users found</p>}
+        <div style={{ margin:"100px",height:"500px",overflow:" scroll"}}>
+          <ul class="collection">
+          { showUsers && props.users.map((user) => {return <UserListItem key={user._id} id = {user._id} account = {user.account} name = {user.name} user_type ={user.user_type} />;})}
+          </ul>
+        </div>
       </div>
     );
 }
