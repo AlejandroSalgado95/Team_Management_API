@@ -1,13 +1,26 @@
 # Team Management API
-> This is a RESTful API made with ExpressJS and Mongoose, used for the Team Management application 
+> This is a MERN stack application, used for the STM system. This repository consists of a RESTful API made with ExpressJS and Mongoose, along with a web client made with ReactJS.
 
 ## Quick Start
 
-In order to run this project, you must do the following steps: 
+In order to run this project locally, you must do the following steps: 
 
 1. Make your own .env file. The environment variables that you need are included in the .env_sample file 
 
-2. Run the following commands:
+2. In the 'axiosConfig.js' file, located at 'react_src/api_calls/axiosConfig.js', make the following changes:
+
+```bash
+# Comment the base url pointing to the STM server and uncomment the one pointing to your computer on port 3000
+
+baseURL: "http://localhost:3000"
+//baseURL:"https://team-management-api.herokuapp.com/"
+
+//instance.defaults.baseURL = 'https://team-management-api.herokuapp.com/';
+instance.defaults.baseURL = "http://localhost:3000";
+
+```
+
+3. Make use of the following commands:
 
 ```bash
 # Install dependencies for server
@@ -19,7 +32,11 @@ npm run start
 # Or run the Express server only and automatically watch for changes
 npm run watch
 
+# Make a development build of your React code any time you make changes to it
+npm run build:dev
+
 ```
+
 
 ## App Info
 
@@ -34,3 +51,10 @@ URL: https://team-management-api.herokuapp.com/
 ### Version
 
 1.0.0
+
+### Release notes
+* Supported features
+- Protected routes 
+- Session management 
+- Push notifications (Android clients only)
+- Chat (Android clients only)
