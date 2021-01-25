@@ -1,7 +1,8 @@
 var path = require('path');
 
 module.exports = (env) => {
-  const isProduction = env.production;
+  const isProduction = env? env.production : undefined;
+
 
   return {
 	entry: './react_src/app.js',
