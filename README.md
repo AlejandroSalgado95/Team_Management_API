@@ -53,7 +53,6 @@ URL: https://team-management-api.herokuapp.com/
 1.0.0
 
 ### Release notes
-* Supported features
 - Protected routes 
 - Session management 
 - Push notifications (Android clients only)
