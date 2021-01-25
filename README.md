@@ -1,4 +1,4 @@
-# Team Management API
+# STM Web App
 > This is a MERN stack application, used for the STM system. This repository consists of a RESTful API made with ExpressJS and Mongoose, along with a web client made with ReactJS.
 
 ## Quick Start
@@ -10,7 +10,7 @@ In order to run this project locally, you must do the following steps:
 2. In the 'axiosConfig.js' file, located at 'react_src/api_calls/axiosConfig.js', make the following changes:
 
 ```bash
-# Comment the base url pointing to the STM server and uncomment the one pointing to your computer on port 3000
+# Uncomment the base url pointing to your computer on port 3000
 
 baseURL: "http://localhost:3000"
 //baseURL:"https://team-management-api.herokuapp.com/"
