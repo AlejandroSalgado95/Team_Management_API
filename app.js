@@ -55,8 +55,13 @@ app.use(cookieParser());
 // Add some routing
 app.use('/api', routes);
 
+//Any other get requests will fallback into the index.html page
+app.get('*', (req,res) =>{
+  res.sendFile(path.join(__dirname,'public/index.html'));
+})
+
 //A tiny, accurate, fast Express middleware for single page apps with client side routing.
-app.use(fallback('index.html', { root: path.join(__dirname, 'public')}))
+//app.use(fallback('index.html', { root: path.join(__dirname, 'public')}))
 
 
 io.on('connect', async socket => {

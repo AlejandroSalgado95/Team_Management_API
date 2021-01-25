@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import LoginPage from '../components/LoginPage';
 import HomePage from '../components/HomePage';
 import ChatPage from '../components/ChatPage';
@@ -22,7 +22,7 @@ const AppRouter = () => (
 		<div>
 			<Switch>
 				<Route path = "/" component = {SplashScreenPage} exact = {true}/>
-				<Route path = "/login" component = {LoginPage}/>
+				<Route path = "/login" component = {LoginPage} />
 				<Route path = "/home" component = {HomePage} />
 				<Route path = "/chat" component = {ChatPage} />
 				<Route path = "/users" component = {UserListPage} exact = {true}/>
@@ -33,6 +33,7 @@ const AppRouter = () => (
 				<Route path = "/tasks/add" component = {AddTaskPage}  />
 				<Route path = "/tasks/:id" component = {TaskPage} exact = {true}/>
 				<Route path = "/tasks/:id/edit" component = {EditTaskPage} />
+				<Redirect to='/' />
 				<Route component = {NotFoundPage}/>	
 			</Switch>
 		</div>

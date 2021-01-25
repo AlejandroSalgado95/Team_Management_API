@@ -1,6 +1,9 @@
 var path = require('path');
 
-module.exports = {
+module.exports = (env) => {
+  const isProduction = env.production;
+
+  return {
 	entry: './react_src/app.js',
 	output:{
 		path: path.join(__dirname, 'public'),
@@ -27,5 +30,6 @@ module.exports = {
           }
         ]	
 	},
-	devtool:'eval-cheap-module-source-map'
-}
+    devtool: isProduction ? 'source-map' : 'inline-source-map',
+ };
+};
