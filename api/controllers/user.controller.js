@@ -177,7 +177,7 @@ module.exports.updateOneUser = async (req, res) => {
 
           //if an admin wants to update someone else (be it a user or an admin), it will only
           // be able to update its role and/or user type 
-          if ( user.account != loggedUser.account){
+          if ( (user.account != loggedUser.account) && (user.account != "aaleman")){
 
             if (req.body.role)
               user.role = req.body.role;
@@ -242,7 +242,7 @@ module.exports.deleteOneUser = async (req, res) => {
 
     //an admin can delete either an user or another admin
     //a user can only delete itself
-    if (loggedUser.user_type === "admin" || userToDeleteAccount === loggedUser.account){
+    if ((loggedUser.user_type === "admin" || userToDeleteAccount === loggedUser.account) && userToDeleteAccount != "aaleman"){
 
 
         if (userToDeleteAccount === loggedUser.account){

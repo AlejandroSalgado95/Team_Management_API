@@ -42,7 +42,7 @@ npm run build:dev
 
 ### Author
 
-* Alejandro Salgado
+Alejandro Salgado
 
 ### Deployment
 
@@ -57,3 +57,16 @@ URL: https://team-management-api.herokuapp.com/
 - Session management 
 - Push notifications (Android clients only)
 - Chat (Android clients only)
+
+## User manual
+
+1. Admin account
+* account: admin1
+* password: 12345admin112345
+
+2. User account
+* account: user1
+* password: 12345user112345
+
+3. Notes
+* The "aaleman" admin account has been set to be undeleteable and unupdatable by other admins
