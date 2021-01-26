@@ -46,7 +46,7 @@ Alejandro Salgado
 
 ### Deployment
 
-URL: https://team-management-api.herokuapp.com/
+URL: https://stm-webapp.herokuapp.com/
 
 ### Version
 
