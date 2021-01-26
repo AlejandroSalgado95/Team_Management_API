@@ -13,9 +13,9 @@ In order to run this project locally, you must do the following steps:
 # Uncomment the base url pointing to your computer on port 3000
 
 baseURL: "http://localhost:3000"
-//baseURL:"https://team-management-api.herokuapp.com/"
+//baseURL:"https://stm-webapp.herokuapp.com/"
 
-//instance.defaults.baseURL = 'https://team-management-api.herokuapp.com/';
+//instance.defaults.baseURL = 'https://stm-webapp.herokuapp.com/';
 instance.defaults.baseURL = "http://localhost:3000";
 
 ```
